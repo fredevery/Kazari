@@ -1,15 +1,16 @@
 {
   "name": "kazari-desktop",
   "productName": "kazari-desktop",
-  "version": "1.0.0",
-  "description": "My Electron application description",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "",
   "main": ".vite/build/main.js",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts,.tsx ."
+    "lint": "eslint"
   },
   "keywords": [],
   "author": {
@@ -27,6 +28,7 @@
     "@electron-forge/plugin-fuses": "^7.8.1",
     "@electron-forge/plugin-vite": "^7.8.1",
     "@electron/fuses": "^1.8.0",
+    "@kazari/eslint-configs": "workspace:*",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "electron": "36.2.1",
