@@ -30,6 +30,7 @@
     "@electron/fuses": "^1.8.0",
     "@kazari/eslint-configs": "workspace:*",
     "@kazari/typescript-configs": "workspace:*",
+    "@types/electron-squirrel-startup": "^1.0.2",
     "@types/react": "19.1.4",
     "@types/react-dom": "19.1.5",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
