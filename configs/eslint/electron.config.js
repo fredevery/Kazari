@@ -2,7 +2,7 @@ import { defineConfig } from "eslint/config";
 import importPlugin from "eslint-plugin-import";
 import baseConfig from "./base.config.js";
 
-export default defineConfig([
+export default electronLintConfig = [
   baseConfig,
   importPlugin.flatConfigs.electron,
   {
@@ -39,4 +39,4 @@ export default defineConfig([
       },
     },
   },
-]);
+];

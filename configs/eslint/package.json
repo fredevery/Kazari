@@ -6,7 +6,8 @@
   "private": true,
   "exports": {
     "./base": "./base.config.js",
-    "./electron": "./electron.config.js"
+    "./electron": "./electron.config.js",
+    "./react": "./react.config.js"
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +22,8 @@
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
     "eslint-plugin-turbo": "^2.5.3",
     "globals": "^16.1.0",
     "typescript-eslint": "^8.32.1"

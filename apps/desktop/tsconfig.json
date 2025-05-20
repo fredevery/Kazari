@@ -1,7 +1,6 @@
 {
-  "extends": "@kazari/typescript-configs/base.tsconfig.json",
+  "extends": "@kazari/typescript-configs/react.tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "outDir": "dist",
   }
 }
