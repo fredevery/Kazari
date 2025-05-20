@@ -1,0 +1,7 @@
+{
+  "extends": "@kazari/typescript-configs/base.tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "dist",
+  }
+}

@@ -1,0 +1,21 @@
+version: '3'
+
+tasks:
+  "purge:nodemodules":
+    cmds:
+      - find . -name "node_modules" -type d -prune -exec rm -rf "{}" +
+
+  "reset:dependencies":
+    cmds:
+      - find . -name "pnpm-lock.yaml" -type f -prune -exec rm -f "{}" +
+      - find . -name "package-lock.json" -type f -prune -exec rm -f "{}" +
+      - task reset:nodemodules
+
+  "reset:nodemodules":
+    cmds:
+      - task purge:nodemodules
+      - pnpm install
+  
+  "start:desktop":
+    cmds:
+      - pnpm --filter desktop start
