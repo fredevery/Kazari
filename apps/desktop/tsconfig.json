@@ -2,5 +2,8 @@
   "extends": "@kazari/typescript-configs/react.tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   }
 }
