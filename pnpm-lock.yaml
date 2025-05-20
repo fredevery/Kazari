@@ -19,10 +19,6 @@ importers:
         version: 5.8.3
 
   apps/desktop:
-    dependencies:
-      electron-squirrel-startup:
-        specifier: ^1.0.1
-        version: 1.0.1
     devDependencies:
       '@electron-forge/cli':
         specifier: ^7.8.1
@@ -75,6 +71,9 @@ importers:
       electron:
         specifier: 36.2.1
         version: 36.2.1
+      electron-squirrel-startup:
+        specifier: ^1.0.1
+        version: 1.0.1
       eslint:
         specifier: ^9.27.0
         version: 9.27.0(jiti@2.4.2)
