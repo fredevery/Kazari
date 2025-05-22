@@ -67,13 +67,17 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ## Electron Windows
 
 - [x] Basic `mainWindow.ts` setup
-- [ ] Complete `windowManager.ts` implementation:
-  - [ ] Window lifecycle management
-  - [ ] Window state persistence
-  - [ ] Window positioning and sizing
+- [x] Implement `windowManager.ts`:
+  - [x] Window lifecycle management
+  - [x] Window state persistence with electron-store
+  - [x] Window positioning and sizing
+  - [x] Window event handling
+  - [ ] Window positioning strategies for different types
 - [x] Basic `index.ts` Electron main entry point
-- [ ] `timerWindow.ts`: always-on-top, floating timer
-- [ ] `breakWindow.ts`: fullscreen break timer screen
+- [ ] Implement additional window types:
+  - [ ] `DailyPlanning` window
+  - [ ] `BreakScreen` window
+  - [ ] `Dashboard` window
 - [ ] Window state logic: show planning view only once per day
 
 ---
@@ -137,7 +141,8 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 
 ## Local Data & Persistence
 
-- [ ] Use `electron-store` for:
+- [x] Set up electron-store for window state
+- [ ] Add additional store configurations:
   - [ ] Daily planning state
   - [ ] Last login timestamp
   - [ ] User preferences
@@ -315,7 +320,7 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## Notes
-- Focus on completing the window management system first
+- Focus on implementing additional window types
 - Implement basic Pomodoro timer before adding task integration
 - Ensure proper type safety across IPC boundaries
 - Consider adding error tracking and logging early

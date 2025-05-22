@@ -6,7 +6,7 @@
   "description": "",
   "main": ".vite/build/main.cjs",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "rm -rf .vite/build && electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
@@ -47,6 +47,8 @@
     "vite": "^6.3.5"
   },
   "dependencies": {
-    "electron-store": "^10.0.1"
+    "electron-store": "^10.0.1",
+    "uuid": "^11.1.0",
+    "zod": "^3.25.13"
   }
 }

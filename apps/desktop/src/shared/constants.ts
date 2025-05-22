@@ -1,4 +1,5 @@
 export enum WindowType {
+  BaseWindow = "BASE_WINDOW",
   Main = "MAIN",
   DailyPlanning = "DAILY_PLANNING",
   BreakScreen = "BREAK_SCREEN",
@@ -10,4 +11,15 @@ export enum AppEvents {
   Ready = "ready",
   WindowAllClosed = "window-all-closed",
   Activate = "activate",
+}
+
+export enum WindowEvents {
+  Move = "move",
+  Resize = "resize",
+  Close = "close",
+  Minimize = "minimize",
+  Maximize = "maximize",
+  Unmaximize = "unmaximize",
+  EnterFullScreen = "enter-full-screen",
+  LeaveFullScreen = "leave-full-screen",
 }
