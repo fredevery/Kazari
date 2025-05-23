@@ -1,3 +1,6 @@
+import path from "node:path";
+import { app } from "electron";
+
 export enum WindowType {
   BaseWindow = "BASE_WINDOW",
   Main = "MAIN",
@@ -23,3 +26,7 @@ export enum WindowEvents {
   EnterFullScreen = "enter-full-screen",
   LeaveFullScreen = "leave-full-screen",
 }
+
+export const isDev = process.env.NODE_ENV === "development" || !app.isPackaged;
+export const userDataPath = app.getPath("userData");
+export const logPath = path.join(userDataPath, "logs");

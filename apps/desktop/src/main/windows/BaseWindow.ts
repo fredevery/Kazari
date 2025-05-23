@@ -1,19 +1,18 @@
 import path from "node:path";
-import { BrowserWindow, app } from "electron";
+import { BrowserWindow, app, type Display } from "electron";
 import { v4 as uuidv4 } from "uuid";
-import { WindowType } from "@/shared/constants.ts";
+import { WindowType, isDev } from "@/shared/constants.ts";
 import type { WindowState } from "@/data/store.ts";
 
-const isDev = process.env.NODE_ENV === "development" || !app.isPackaged;
 export class BaseWindow {
-  private window: BrowserWindow;
   private state: WindowState;
   private loadURL: string | undefined = MAIN_WINDOW_VITE_DEV_SERVER_URL;
 
   type: WindowType = WindowType.BaseWindow;
   id: string;
+  window: BrowserWindow;
 
-  constructor({}) {
+  constructor() {
     this.id = uuidv4();
     this.state = this.setupState();
     this.window = this.setupWindow();

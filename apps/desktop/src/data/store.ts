@@ -28,6 +28,7 @@ export type WindowConfig = z.infer<typeof WindowConfigSchema>;
 export type WindowState = z.infer<typeof WindowStateSchema>;
 
 class AppStore {
+  private static instance: AppStore;
   private schema = {
     windows: z.record(z.string(), WindowConfigSchema),
   };
@@ -40,8 +41,15 @@ class AppStore {
       },
     });
   }
+
+  static getInstance() {
+    if (!AppStore.instance) {
+      AppStore.instance = new AppStore();
+    }
+    return AppStore.instance;
+  }
 }
 
-export const appStore = new AppStore();
+export const appStore = AppStore.getInstance();
 
 export default appStore;
