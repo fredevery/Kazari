@@ -1,13 +1,22 @@
 import path from "node:path";
 import log from "electron-log";
 import { isDev, logPath } from "./constants.js";
+import Rollbar from "rollbar";
 
 export class Logger {
   private static instance: Logger;
   private logger: typeof log;
+  private rollbar: Rollbar;
 
   private constructor() {
     this.logger = log;
+    this.rollbar = new Rollbar({
+      accessToken: process.env.ROLLBAR_CLIENT_TOKEN || "",
+      captureUncaught: true,
+      captureUnhandledRejections: true,
+    });
+
+    this.rollbar.log("Hello world!");
   }
 
   static setupTransports() {
@@ -26,23 +35,23 @@ export class Logger {
     return Logger.instance;
   }
 
-  error(message: string, ...args: any[]) {
+  error(message: string, ...args: unknown[]) {
     this.logger.error(message, ...args);
   }
 
-  warn(message: string, ...args: any[]) {
+  warn(message: string, ...args: unknown[]) {
     this.logger.warn(message, ...args);
   }
 
-  info(message: string, ...args: any[]): void {
+  info(message: string, ...args: unknown[]): void {
     this.logger.info(message, ...args);
   }
 
-  debug(message: string, ...args: any[]): void {
+  debug(message: string, ...args: unknown[]): void {
     this.logger.debug(message, ...args);
   }
 
-  verbose(message: string, ...args: any[]): void {
+  verbose(message: string, ...args: unknown[]): void {
     this.logger.verbose(message, ...args);
   }
 }

@@ -1,4 +1,3 @@
-import { MainWindow } from "./windows/MainWindow.ts";
 // import { appStore, type WindowConfig, type WindowState } from "@/data/store.ts";
 // import { AppEvents, WindowType } from "@/shared/constants.ts";
 import {
@@ -8,11 +7,19 @@ import {
   //   // type BrowserWindowConstructorOptions,
 } from "electron";
 
+import { MainWindow } from "./windows/MainWindow.ts";
+import { logger } from "@/shared/logger.ts";
+
 class WindowManager {
   private static instance: WindowManager;
   private windows: Map<string, MainWindow[]> = new Map();
 
+  constructor() {
+    logger.info("Initializing WindowManager");
+  }
+
   static getInstance() {
+    logger.info("Getting WindowManager instance");
     if (!WindowManager.instance) {
       WindowManager.instance = new WindowManager();
     }
@@ -20,11 +27,12 @@ class WindowManager {
   }
 
   setupWindows() {
+    logger.info("Setting up windows");
     const mainWindows: MainWindow[] = [];
     screen.getAllDisplays().forEach((display) => {
-      console.log("display", display);
       mainWindows.push(new MainWindow({ display }));
     });
+    logger.info(`${mainWindows.length} Main Windows Created`);
     this.windows.set("mainWindows", mainWindows);
   }
 }

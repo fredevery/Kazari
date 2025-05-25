@@ -1,13 +1,16 @@
+import path from "node:path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 // https://vitejs.dev/config
 export default defineConfig({
-  root: "./src/renderer",
+  root: path.resolve(__dirname, "./src/renderer"),
+  // root: "./src/renderer",
   plugins: [react()],
   resolve: {
     alias: {
-      "@": "./src",
+      "@": path.resolve(__dirname, "./src"),
+      // "@": "./src",
     },
   },
 });

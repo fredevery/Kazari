@@ -23,19 +23,23 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 
 ## Error Handling & Logging (High Priority)
 
-- [ ] Set up error boundary in React app:
-  - [ ] Create ErrorBoundary component
-  - [ ] Add error reporting UI
+- [x] Set up error boundary in React app:
+  - [x] Create ErrorBoundary component
+  - [x] Add error reporting UI
   - [ ] Implement error recovery mechanisms
 - [ ] Implement main process error handling:
-  - [ ] Add uncaught exception handlers
-  - [ ] Set up process crash reporting
-  - [ ] Implement graceful shutdown
-- [ ] Add logging system:
-  - [ ] Set up electron-log
-  - [ ] Configure log levels
-  - [ ] Implement log rotation
-  - [ ] Add log file management
+    - [ ] Handle uncaught exceptions (`process.on("uncaughtException")`)
+    - [ ] Handle unhandled promise rejections (`process.on("unhandledRejection")`)
+  - [ ] Log all errors using electron-log
+  - [ ] Implement graceful shutdown on fatal errors
+  - [ ] (Optional) Notify user of critical errors
+  - [ ] (Optional) Integrate crash/error reporting service (e.g., Sentry)
+    - [ ] Test error handling by simulating errors
+- [x] Add logging system:
+  - [x] Set up electron-log
+  - [x] Configure log levels
+  - [x] Implement log rotation
+  - [x] Add log file management
 - [ ] Create error reporting mechanism:
   - [ ] Add error tracking service
   - [ ] Implement error aggregation

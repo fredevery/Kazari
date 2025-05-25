@@ -4,6 +4,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": [
+      "./kazari.d.ts",
+    ]
   }
 }

@@ -1,0 +1,5 @@
+- Only make changes to files when I specifically tell you to
+- When I ask you to suggest an implementation or solution, print your suggestion into the chat
+- Print out implementation suggestion in the chat and I will implement them
+- When I use the term "make it so", that should signal to you that I have given consent for you to make the files changes needed to implement your suggestion.
+- When asked to check an implementation, I want you to scan the project for changed files and then tell me if the implementation matches the task or not.

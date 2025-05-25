@@ -3,20 +3,26 @@ import { BrowserWindow, app, type Display } from "electron";
 import { v4 as uuidv4 } from "uuid";
 import { WindowType, isDev } from "@/shared/constants.ts";
 import type { WindowState } from "@/data/store.ts";
+import { logger } from "@/shared/logger.ts";
 
 export class BaseWindow {
   private state: WindowState;
   private loadURL: string | undefined = MAIN_WINDOW_VITE_DEV_SERVER_URL;
 
-  type: WindowType = WindowType.BaseWindow;
   id: string;
   window: BrowserWindow;
 
   constructor() {
-    this.id = uuidv4();
+    this.id = `${this.type}-${uuidv4()}`;
+    logger.info(`Creating new ${this.type} window with ID: ${this.id}`);
+
     this.state = this.setupState();
     this.window = this.setupWindow();
     this.setupEvents();
+  }
+
+  get type() {
+    return WindowType.BaseWindow;
   }
 
   get baseState() {
@@ -65,30 +71,59 @@ export class BaseWindow {
   }
 
   private setupEvents() {
+    logger.info(`Setting up events for window ${this.id}`);
     this.window.on("move", () => this.saveState());
     this.window.on("resize", () => this.saveState());
     this.window.on("maximize", () => this.saveState());
     this.window.on("unmaximize", () => this.saveState());
     this.window.on("enter-full-screen", () => this.saveState());
     this.window.on("leave-full-screen", () => this.saveState());
-    this.window.on("ready-to-show", () => this.showWindow());
+    this.window.on("ready-to-show", () => {
+      logger.info(`Window ${this.id} ready to show`);
+      this.showWindow();
+    });
+
+    this.window.webContents.on(
+      "did-fail-load",
+      (_event, errorCode, errorDescription) => {
+        logger.error(
+          `Window ${this.id} failed to load: ${errorDescription} (${errorCode})`,
+        );
+      },
+    );
   }
 
   private saveState() {
-    this.state.bounds = this.window.getBounds();
-    this.state.isMaximized = this.window.isMaximized();
-    this.state.isFullScreen = this.window.isFullScreen();
-    this.state.isVisible = this.window.isVisible();
+    const newState = {
+      bounds: this.window.getBounds(),
+      isMaximized: this.window.isMaximized(),
+      isFullScreen: this.window.isFullScreen(),
+      isVisible: this.window.isVisible(),
+    };
+
+    if (JSON.stringify(newState) !== JSON.stringify(this.state)) {
+      logger.debug(`Window ${this.id} state updated:`, newState);
+      this.state = newState;
+    }
   }
   // private restoreState() {}
 
   showWindow() {
+    logger.info(`Showing window ${this.id}`);
     this.window.show();
+    this.afterShowWindow();
   }
+
+  afterShowWindow() {
+    logger.info(`After showing window ${this.id}`);
+  }
+
   hideWindow() {
+    logger.info(`Hiding window ${this.id}`);
     this.window.hide();
   }
   closeWindow() {
+    logger.info(`Closing window ${this.id}`);
     this.window.close();
   }
 }

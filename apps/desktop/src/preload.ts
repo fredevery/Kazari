@@ -1,4 +1,15 @@
-// See the Electron documentation for details on how to use preload scripts:
-// https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
+import { contextBridge } from "electron";
+import { logger } from "@/shared/logger.ts";
 
-console.log("preload.js");
+contextBridge.exposeInMainWorld("kazari", {
+  logger: {
+    info: (message: string, ...args: unknown[]) =>
+      logger.info(message, ...args),
+    error: (message: string, ...args: unknown[]) =>
+      logger.error(message, ...args),
+    warn: (message: string, ...args: unknown[]) =>
+      logger.warn(message, ...args),
+    debug: (message: string, ...args: unknown[]) =>
+      logger.debug(message, ...args),
+  },
+});
