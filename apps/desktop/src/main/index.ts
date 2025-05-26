@@ -7,8 +7,6 @@ dotenv.config({
   path: [".env.local", ".env"],
 });
 
-console.log("process.env", process.env.ROLLBAR_CLIENT_TOKEN);
-
 function main() {
   logger.info("Starting Kazari application...");
 

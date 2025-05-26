@@ -12,17 +12,33 @@ interface State {
 }
 
 export class ErrorBoundary extends Component<Props, State> {
+  logger: typeof window.kazari.logger;
+
   constructor(props: Props) {
     super(props);
+    this.logger = window.kazari.logger;
     this.state = { hasError: false, error: null };
+    this.setupWindowListeners();
   }
 
   static getDerivedStateFromError(error: Error) {
     return { hasError: true, error };
   }
 
+  setupWindowListeners() {
+    window.addEventListener("error", (event) => {
+      this.logger.error("Global error caught:", event.error);
+      this.setState({ hasError: true, error: event.error });
+    });
+    
+    window.addEventListener("unhandledrejection", (event) => {
+      this.logger.error("Unhandled promise rejection caught:", event.reason);
+      this.setState({ hasError: true, error: event.reason instanceof Error ? event.reason : new Error(String(event.reason)) });
+    });
+  }
+
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    window.logger.error("ErrorBoundary caught an error:", error, errorInfo);
+    this.logger.error("ErrorBoundary caught an error:", error, errorInfo);
   }
 
   render() {

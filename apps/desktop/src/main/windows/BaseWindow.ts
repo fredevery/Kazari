@@ -1,5 +1,5 @@
 import path from "node:path";
-import { BrowserWindow, app, type Display } from "electron";
+import { BrowserWindow } from "electron";
 import { v4 as uuidv4 } from "uuid";
 import { WindowType, isDev } from "@/shared/constants.ts";
 import type { WindowState } from "@/data/store.ts";
