@@ -11,6 +11,7 @@ export class MainWindow extends BaseWindow {
     this.display = display;
     logger.info(`Setting bounds for window ${this.id}:`, this.display.bounds);
     this.window.setBounds(this.display.bounds);
+    this.windowLoad();
   }
 
   get type() {

@@ -5,7 +5,6 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## Project Setup
-
 - [x] Initialize project with Electron Forge + Vite + TypeScript + React
 - [x] Configure `vite.config.ts` for the renderer
 - [x] Configure `electron.vite.config.ts` for the main process
@@ -22,18 +21,17 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## Error Handling & Logging (High Priority)
-
 - [x] Set up error boundary in React app:
   - [x] Create ErrorBoundary component
   - [x] Add error reporting UI
   - [ ] Implement error recovery mechanisms
-- [ ] Implement main process error handling:
-    - [ ] Handle uncaught exceptions (`process.on("uncaughtException")`)
-    - [ ] Handle unhandled promise rejections (`process.on("unhandledRejection")`)
-  - [ ] Log all errors using electron-log
-  - [ ] Implement graceful shutdown on fatal errors
-  - [ ] (Optional) Notify user of critical errors
-  - [ ] (Optional) Integrate crash/error reporting service (e.g., Sentry)
+- [~] Implement main process error handling:
+    - [x] Handle uncaught exceptions (`process.on("uncaughtException")`)
+    - [x] Handle unhandled promise rejections (`process.on("unhandledRejection")`)
+    - [ ] Log all errors using electron-log (partially implemented)
+    - [ ] Implement graceful shutdown on fatal errors
+    - [ ] (Optional) Notify user of critical errors
+    - [ ] (Optional) Integrate crash/error reporting service (e.g., Sentry)
     - [ ] Test error handling by simulating errors
 - [x] Add logging system:
   - [x] Set up electron-log
@@ -48,7 +46,6 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## Security (High Priority)
-
 - [ ] Implement Content Security Policy:
   - [ ] Configure CSP headers
   - [ ] Set up CSP reporting
@@ -69,8 +66,7 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## Electron Windows
-
-- [x] Basic `mainWindow.ts` setup
+- [x] Basic `MainWindow.ts` setup
 - [x] Implement `windowManager.ts`:
   - [x] Window lifecycle management
   - [x] Window state persistence with electron-store
@@ -87,10 +83,9 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## React Renderer
-
 - [x] Bootstrap React app with Vite in `src/renderer`
 - [ ] Create proper directory structure:
-  - [ ] `components/` - Reusable UI components
+  - [ ] `components/` - Reusable UI components (ErrorBoundary exists)
   - [ ] `pages/` - Main application views
   - [ ] `state/` - State management
   - [ ] `hooks/` - Custom React hooks
@@ -104,7 +99,6 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## IPC & Preload
-
 - [ ] Complete `preload.ts` implementation:
   - [ ] Context isolation setup
   - [ ] API exposure to renderer
@@ -119,7 +113,6 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## Core Pomodoro Logic
-
 - [ ] Timer logic:
   - [ ] Session timing (25/5/15)
   - [ ] Break timing
@@ -131,7 +124,6 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## Task Aggregation
-
 - [ ] API wrappers in `src/integrations/`:
   - [ ] `todoist.ts`
   - [ ] `github.ts`
@@ -144,7 +136,6 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## Local Data & Persistence
-
 - [x] Set up electron-store for window state
 - [ ] Add additional store configurations:
   - [ ] Daily planning state
@@ -157,7 +148,6 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## System Integration (Medium Priority)
-
 - [ ] Add system tray integration:
   - [ ] Create tray icon
   - [ ] Add tray menu
@@ -178,7 +168,6 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## Accessibility (Medium Priority)
-
 - [ ] Add keyboard shortcuts:
   - [ ] Create shortcut documentation
   - [ ] Implement shortcut handlers
@@ -199,7 +188,6 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## Updates & Auto-updates (Medium Priority)
-
 - [ ] Implement auto-update mechanism:
   - [ ] Set up update server
   - [ ] Add update checking
@@ -220,7 +208,6 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## Dev & Build
-
 - [ ] Complete Vite dev server setup:
   - [ ] Hot module replacement
   - [ ] Source maps
@@ -232,7 +219,6 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## Testing (High Priority)
-
 - [ ] Set up unit testing framework:
   - [ ] Configure Jest
   - [ ] Add test utilities
@@ -253,7 +239,6 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## Internationalization (Low Priority)
-
 - [ ] Set up i18n framework:
   - [ ] Configure i18next
   - [ ] Add language detection
@@ -274,7 +259,6 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## Development Tools (Low Priority)
-
 - [ ] Add debug logging:
   - [ ] Create debug utilities
   - [ ] Add debug configuration
@@ -295,7 +279,6 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## Documentation (Medium Priority)
-
 - [ ] Add JSDoc comments:
   - [ ] Document components
   - [ ] Add API documentation
@@ -316,7 +299,6 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## Stretch Goals
-
 - [ ] Progress dashboard/stats view
 - [ ] Ambient break screen with background media
 - [ ] AI suggestions or prioritization of tasks

@@ -11,6 +11,7 @@ export class BaseWindow {
 
   id: string;
   window: BrowserWindow;
+  routerPath: string = "/";
 
   constructor() {
     this.id = `${this.type}-${uuidv4()}`;
@@ -51,19 +52,21 @@ export class BaseWindow {
       },
     });
 
-    if (isDev) {
-      window.webContents.openDevTools({ mode: "right" });
-    }
-
-    if (this.loadURL) {
-      window.loadURL(this.loadURL);
-    } else {
-      window.loadFile(
-        path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`),
-      );
-    }
-
     return window;
+  }
+
+  windowLoad() {
+    if (this.loadURL) {
+      const loadPath = `${this.loadURL}#${this.routerPath}`;
+      logger.info(`Loading URL for window ${this.id}:`, loadPath);
+      this.window.loadURL(loadPath);
+    } else {
+      logger.warn(`No URL to load for window ${this.id}`);
+    }
+
+    if (isDev) {
+      this.window.webContents.openDevTools({ mode: "right" });
+    }
   }
 
   private setupState() {
