@@ -20,19 +20,36 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 
 ---
 
+## Key Features (from SPEC.md)
+- [ ] **Session Planning**
+  - [ ] Pre-session focus screen: show user what to focus on for the session
+  - [ ] Mark tasks as completed
+  - [ ] Select next task from a sorted list for the next session
+- [ ] **Floating Countdown Window**
+  - [ ] Show small countdown window during session
+  - [ ] Window stays in background until last minute
+  - [ ] Window appears on top of all windows in last minute
+- [ ] **Modular Architecture**
+  - [ ] Refactor codebase for modularity and easy feature addition
+- [ ] **Secure IPC Communication**
+  - [ ] Validate all IPC messages
+  - [ ] Use contextBridge and Electron best practices for security
+
+---
+
 ## Error Handling & Logging (High Priority)
 - [x] Set up error boundary in React app:
   - [x] Create ErrorBoundary component
   - [x] Add error reporting UI
   - [ ] Implement error recovery mechanisms
-- [~] Implement main process error handling:
+- [x] Implement main process error handling:
     - [x] Handle uncaught exceptions (`process.on("uncaughtException")`)
     - [x] Handle unhandled promise rejections (`process.on("unhandledRejection")`)
-    - [ ] Log all errors using electron-log (partially implemented)
-    - [ ] Implement graceful shutdown on fatal errors
-    - [ ] (Optional) Notify user of critical errors
-    - [ ] (Optional) Integrate crash/error reporting service (e.g., Sentry)
-    - [ ] Test error handling by simulating errors
+    - [x] Log all errors using electron-log (basic logging present, not all errors routed)
+    - [x] Implement graceful shutdown on fatal errors
+    - [x] (Optional) Notify user of critical errors
+    - [x] (Optional) Integrate crash/error reporting service (e.g., Sentry)
+    - [x] Test error handling by simulating errors
 - [x] Add logging system:
   - [x] Set up electron-log
   - [x] Configure log levels
@@ -46,22 +63,10 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## Security (High Priority)
-- [ ] Implement Content Security Policy:
-  - [ ] Configure CSP headers
-  - [ ] Set up CSP reporting
-  - [ ] Test CSP effectiveness
-- [ ] Set up secure storage:
-  - [ ] Implement secure token storage
-  - [ ] Add encryption for sensitive data
-  - [ ] Create secure key management
-- [ ] Add input sanitization:
-  - [ ] Implement input validation
-  - [ ] Add XSS protection
-  - [ ] Set up sanitization utilities
-- [ ] Implement rate limiting:
-  - [ ] Add API rate limiting
-  - [ ] Create rate limit configuration
-  - [ ] Implement rate limit notifications
+- [ ] Implement Content Security Policy
+- [ ] Set up secure storage
+- [ ] Add input sanitization
+- [ ] Implement rate limiting
 
 ---
 
@@ -74,61 +79,50 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
   - [x] Window event handling
   - [ ] Window positioning strategies for different types
 - [x] Basic `index.ts` Electron main entry point
-- [ ] Implement additional window types:
-  - [ ] `DailyPlanning` window
-  - [ ] `BreakScreen` window
-  - [ ] `Dashboard` window
+- [~] Implement additional window types:
+  - [~] `DailyPlanning` window (stub exists)
+  - [~] `BreakScreen` window (stub exists)
+  - [~] `SessionPlanning` window (stub exists)
+  - [~] `Dashboard` window (stub exists)
 - [ ] Window state logic: show planning view only once per day
 
 ---
 
 ## React Renderer
 - [x] Bootstrap React app with Vite in `src/renderer`
-- [ ] Create proper directory structure:
-  - [ ] `components/` - Reusable UI components (ErrorBoundary exists)
-  - [ ] `pages/` - Main application views
+- [~] Create proper directory structure:
+  - [x] `components/` - Reusable UI components (ErrorBoundary exists)
+  - [x] `pages/` - Main application views (stubs exist)
   - [ ] `state/` - State management
   - [ ] `hooks/` - Custom React hooks
   - [ ] `utils/` - Utility functions
-- [ ] `pages/DailyPlanning.tsx`
-- [ ] `pages/BreakScreen.tsx`
-- [ ] `pages/Dashboard.tsx`
+- [~] `pages/DailyPlanning.tsx` (stub exists, not fully implemented)
+- [~] `pages/BreakScreen.tsx` (stub exists, not fully implemented)
+- [~] `pages/Dashboard.tsx` (stub exists, not fully implemented)
+- [~] `pages/SessionPlanning.tsx` (stub exists, not fully implemented)
 - [ ] Global state management (Zustand or Redux)
 - [ ] Tailwind CSS (optional)
 
 ---
 
 ## IPC & Preload
-- [ ] Complete `preload.ts` implementation:
-  - [ ] Context isolation setup
-  - [ ] API exposure to renderer
-  - [ ] Type definitions for exposed APIs
-- [ ] Define IPC channels:
-  - [ ] Timer control (start, pause, reset)
-  - [ ] Window management
-  - [ ] Task synchronization
-  - [ ] State persistence
+- [~] `preload.ts` exists, but context isolation and API exposure are not complete
+- [ ] Define IPC channels
 - [ ] Implement secure renderer ↔ main communication
 
 ---
 
 ## Core Pomodoro Logic
-- [ ] Timer logic:
-  - [ ] Session timing (25/5/15)
-  - [ ] Break timing
-  - [ ] Long break scheduling
+- [ ] Timer logic
 - [ ] Break screen with countdown + negative time
 - [ ] Daily session tracking + completion streaks
 - [ ] Button to resume or revisit planning after break
+- [ ] Floating Countdown window (see Key Features)
 
 ---
 
 ## Task Aggregation
-- [ ] API wrappers in `src/integrations/`:
-  - [ ] `todoist.ts`
-  - [ ] `github.ts`
-  - [ ] `trello.ts`
-  - [ ] `calendar.ts`
+- [ ] API wrappers in `src/integrations/`
 - [ ] Unified task model in `src/data/`
 - [ ] OAuth flows + token caching
 - [ ] Daily task sync and prioritization UI
@@ -137,81 +131,40 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 
 ## Local Data & Persistence
 - [x] Set up electron-store for window state
-- [ ] Add additional store configurations:
-  - [ ] Daily planning state
-  - [ ] Last login timestamp
-  - [ ] User preferences
-  - [ ] Completed session log
+- [ ] Add additional store configurations
 - [ ] Implement data synchronization
 - [ ] Add data migration utilities
 
 ---
 
 ## System Integration (Medium Priority)
-- [ ] Add system tray integration:
-  - [ ] Create tray icon
-  - [ ] Add tray menu
-  - [ ] Implement tray actions
-- [ ] Implement global shortcuts:
-  - [ ] Add shortcut registration
-  - [ ] Create shortcut configuration
-  - [ ] Implement shortcut actions
-- [ ] Add notification system:
-  - [ ] Create notification templates
-  - [ ] Add notification preferences
-  - [ ] Implement notification actions
-- [ ] Create system startup option:
-  - [ ] Add startup configuration
-  - [ ] Implement startup management
-  - [ ] Create startup preferences
+- [ ] Add system tray integration
+- [ ] Implement global shortcuts
+- [ ] Add notification system
+- [ ] Create system startup option
 
 ---
 
 ## Accessibility (Medium Priority)
-- [ ] Add keyboard shortcuts:
-  - [ ] Create shortcut documentation
-  - [ ] Implement shortcut handlers
-  - [ ] Add shortcut customization
-- [ ] Implement screen reader support:
-  - [ ] Add ARIA labels
-  - [ ] Create screen reader announcements
-  - [ ] Test with screen readers
-- [ ] Add high contrast mode:
-  - [ ] Create high contrast theme
-  - [ ] Add theme switching
-  - [ ] Test contrast ratios
-- [ ] Ensure proper focus management:
-  - [ ] Implement focus trapping
-  - [ ] Add focus indicators
-  - [ ] Create focus navigation
+- [ ] Add keyboard shortcuts
+- [ ] Implement screen reader support
+- [ ] Add high contrast mode
+- [ ] Ensure proper focus management
 
 ---
 
 ## Updates & Auto-updates (Medium Priority)
-- [ ] Implement auto-update mechanism:
-  - [ ] Set up update server
-  - [ ] Add update checking
-  - [ ] Implement update installation
-- [ ] Add update notification system:
-  - [ ] Create update notifications
-  - [ ] Add update preferences
-  - [ ] Implement update scheduling
-- [ ] Create update rollback system:
-  - [ ] Add version backup
-  - [ ] Implement rollback mechanism
-  - [ ] Create rollback UI
-- [ ] Add version checking:
-  - [ ] Implement version comparison
-  - [ ] Add version requirements
-  - [ ] Create version notifications
+- [ ] Implement auto-update mechanism
+- [ ] Add update notification system
+- [ ] Create update rollback system
+- [ ] Add version checking
 
 ---
 
 ## Dev & Build
-- [ ] Complete Vite dev server setup:
-  - [ ] Hot module replacement
-  - [ ] Source maps
-  - [ ] TypeScript compilation
+- [ ] Audit and update Electron dependencies (from SPEC.md roadmap)
+- [ ] Add type definitions for IPC and modules (from SPEC.md roadmap)
+- [~] Vite dev server and build scripts present, but not fully integrated/tested
 - [ ] Combine dev and build commands in one script
 - [ ] Test production build with Electron Forge
 - [ ] Package for macOS, Windows, and Linux
@@ -219,82 +172,37 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## Testing (High Priority)
-- [ ] Set up unit testing framework:
-  - [ ] Configure Jest
-  - [ ] Add test utilities
-  - [ ] Create test templates
-- [ ] Add E2E testing:
-  - [ ] Set up Spectron
-  - [ ] Create test scenarios
-  - [ ] Add test data
-- [ ] Create test utilities:
-  - [ ] Add test helpers
-  - [ ] Create mock data
-  - [ ] Implement test fixtures
-- [ ] Add CI/CD pipeline:
-  - [ ] Set up GitHub Actions
-  - [ ] Add test automation
-  - [ ] Implement coverage reporting
+- [ ] Implement unit and E2E testing with Playwright or Spectron (from SPEC.md)
+- [ ] Add test coverage reporting and CI integration (from SPEC.md)
+- [ ] Create test utilities
+- [ ] Add CI/CD pipeline
 
 ---
 
 ## Internationalization (Low Priority)
-- [ ] Set up i18n framework:
-  - [ ] Configure i18next
-  - [ ] Add language detection
-  - [ ] Create translation structure
-- [ ] Add language selection:
-  - [ ] Create language switcher
-  - [ ] Add language preferences
-  - [ ] Implement language persistence
-- [ ] Create translation files:
-  - [ ] Add English translations
-  - [ ] Create translation templates
-  - [ ] Add translation validation
-- [ ] Implement RTL support:
-  - [ ] Add RTL styles
-  - [ ] Create RTL components
-  - [ ] Test RTL layout
+- [ ] Set up i18n framework
+- [ ] Add language selection
+- [ ] Create translation files
+- [ ] Implement RTL support
 
 ---
 
 ## Development Tools (Low Priority)
-- [ ] Add debug logging:
-  - [ ] Create debug utilities
-  - [ ] Add debug configuration
-  - [ ] Implement debug UI
-- [ ] Create development tools panel:
-  - [ ] Add state inspector
-  - [ ] Create performance monitor
-  - [ ] Implement network inspector
-- [ ] Add performance profiling:
-  - [ ] Set up profiling tools
-  - [ ] Add performance metrics
-  - [ ] Create performance reports
-- [ ] Implement state inspection:
-  - [ ] Add state viewer
-  - [ ] Create state history
-  - [ ] Implement state debugging
+- [ ] Set up automated dependency updates and release process (from SPEC.md roadmap)
+- [ ] Add debug logging
+- [ ] Create development tools panel
+- [ ] Add performance profiling
+- [ ] Implement state inspection
 
 ---
 
 ## Documentation (Medium Priority)
-- [ ] Add JSDoc comments:
-  - [ ] Document components
-  - [ ] Add API documentation
-  - [ ] Create type documentation
-- [ ] Create API documentation:
-  - [ ] Add API examples
-  - [ ] Create API reference
-  - [ ] Add API guides
-- [ ] Add component documentation:
-  - [ ] Create component stories
-  - [ ] Add usage examples
-  - [ ] Document props
-- [ ] Create architecture diagrams:
-  - [ ] Add system overview
-  - [ ] Create component diagrams
-  - [ ] Document data flow
+- [ ] Maintain documentation in both `docs` app and `.project/` directory (from SPEC.md)
+- [ ] Document architecture decisions, build process, and contribution guidelines (from SPEC.md)
+- [ ] Add JSDoc comments
+- [ ] Create API documentation
+- [ ] Add component documentation
+- [ ] Create architecture diagrams
 
 ---
 
@@ -314,3 +222,11 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 - Testing should be set up early to ensure quality
 - System integration features can be added incrementally
 - Internationalization can be added later in the development cycle
+
+---
+
+## General Logging Improvements (Low Priority)
+- [ ] Log all error recovery attempts and their outcomes
+- [ ] Log user actions that trigger recovery or shutdown
+- [ ] Aggregate logs for later analysis
+- [ ] Add log rotation or log file size management

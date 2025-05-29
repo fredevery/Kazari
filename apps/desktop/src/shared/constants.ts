@@ -7,6 +7,8 @@ export enum WindowType {
   DailyPlanning = "DAILY_PLANNING",
   BreakScreen = "BREAK_SCREEN",
   Dashboard = "DASHBOARD",
+  SessionPlanning = "SESSION_PLANNING",
+  Settings = "SETTINGS",
 }
 
 export enum AppEvents {
@@ -25,6 +27,19 @@ export enum WindowEvents {
   Unmaximize = "unmaximize",
   EnterFullScreen = "enter-full-screen",
   LeaveFullScreen = "leave-full-screen",
+}
+
+export enum Phases {
+  FOCUS = "focus",
+  BREAK = "break",
+  PLANNING = "planning",
+}
+
+export enum TimerActions {
+  START = "start",
+  PAUSE = "pause",
+  RESUME = "resume",
+  STOP = "stop",
 }
 
 export const isDev = process.env.NODE_ENV === "development" || !app.isPackaged;

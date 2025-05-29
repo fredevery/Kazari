@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, dialog } from "electron";
 import dotenv from "dotenv";
 import { windowManager } from "./windowManager.js";
 import { logger } from "@/shared/logger.ts";
@@ -12,7 +12,7 @@ function main() {
 
   app.on("ready", () => {
     logger.info("Application is ready, setting up windows...");
-    windowManager.setupWindows();
+    windowManager.launchSessionPlanningWindow();
   });
 
   app.on("window-all-closed", () => {
@@ -27,7 +27,7 @@ function main() {
     logger.info("Application activated!");
     if (BrowserWindow.getAllWindows().length === 0) {
       logger.info("No windows found, setting up windows...");
-      windowManager.setupWindows();
+      windowManager.launchSessionPlanningWindow();
     }
   });
 
@@ -38,11 +38,23 @@ function main() {
 
   process.on("uncaughtException", (error) => {
     logger.error("Uncaught exception:", error);
+    performGracefulShutdown();
   });
 
   process.on("unhandledRejection", (reason, promise) => {
     logger.error("Unhandled rejection:", reason, promise);
+    performGracefulShutdown();
   });
+}
+
+async function performGracefulShutdown() {
+  logger.info("Performing graceful shutdown...");
+  dialog.showErrorBox(
+    "Fatal Error",
+    "An unexpected error occurred. The application will now exit.",
+  );
+  // TODO: Save state or perform cleanup if necessary
+  app.quit();
 }
 
 try {

@@ -1,5 +1,15 @@
+- Before any suggestions be sure to have .project/SPEC.md in memory for reference
 - Only make changes to files when I specifically tell you to
 - When I ask you to suggest an implementation or solution, print your suggestion into the chat
 - Print out implementation suggestion in the chat and I will implement them
 - When I use the term "make it so", that should signal to you that I have given consent for you to make the files changes needed to implement your suggestion.
 - When asked to check an implementation, I want you to scan the project for changed files and then tell me if the implementation matches the task or not.
+- When I prompt to "validate project state [project_dir]" you need to:
+  - perform a new scan of the [project_dir]
+  - locate the TODO.md file inside the .project/ directory
+  - compare the state of the project codebase to the TODO.md
+  - show the changes required to make the TODO.md file reflect the state of the project accurately
+  - I will then say "make it so" once I have reviewed the TODO.md changes
+- When I prompt "what's next? [project_dir]" you need to:
+  - locate the TODO.md file inside the .project/ directory
+  - scan the file and suggest a logical next step

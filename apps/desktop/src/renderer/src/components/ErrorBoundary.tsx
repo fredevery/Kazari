@@ -18,23 +18,10 @@ export class ErrorBoundary extends Component<Props, State> {
     super(props);
     this.logger = window.kazari.logger;
     this.state = { hasError: false, error: null };
-    this.setupWindowListeners();
   }
 
   static getDerivedStateFromError(error: Error) {
     return { hasError: true, error };
-  }
-
-  setupWindowListeners() {
-    window.addEventListener("error", (event) => {
-      this.logger.error("Global error caught:", event.error);
-      this.setState({ hasError: true, error: event.error });
-    });
-    
-    window.addEventListener("unhandledrejection", (event) => {
-      this.logger.error("Unhandled promise rejection caught:", event.reason);
-      this.setState({ hasError: true, error: event.reason instanceof Error ? event.reason : new Error(String(event.reason)) });
-    });
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
@@ -48,7 +35,12 @@ export class ErrorBoundary extends Component<Props, State> {
 
   renderErrorBoundary() {
     if (this.props.fallback) return this.props.fallback;
-    return <div>Something went wrong</div>;
+    return (
+      <div>
+        <h2>Something went wrong</h2>
+        <button onClick={this.handleRetry}>Try Again</button>
+      </div>
+    )
   }
 
   renderFallback() {
@@ -57,5 +49,10 @@ export class ErrorBoundary extends Component<Props, State> {
 
   renderChildren() {
     return this.props.children;
+  }
+
+  handleRetry () {
+    // Reset error state to re-render children
+    this.setState({ hasError: false, error: null });
   }
 }

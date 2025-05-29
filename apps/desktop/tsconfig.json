@@ -3,10 +3,11 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@renderer/*": ["./src/renderer/src/*"],
     },
     "types": [
-      "./kazari.d.ts",
+      "./kazari.env.d.ts",
     ]
   }
 }
