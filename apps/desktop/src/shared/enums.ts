@@ -40,5 +40,8 @@ export enum TimerActions {
 }
 
 export enum TimerEvents {
-  TICK = "timer:tick",
+  PHASE_START = "timer:phase:start:global",
+  PHASE_END = "timer:phase:end:global",
+  PHASE_SET = "timer:phase:activated:global",
+  TICK = "timer:tick:global",
 }

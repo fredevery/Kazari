@@ -13,7 +13,7 @@ export class Phase {
     canOverrun: false,
   };
   private startTime: number = 0;
-  private isActive: boolean = false;
+  public isActive: boolean = false;
 
   constructor(phaseConfig: PhaseConfig) {
     this.config = phaseConfig;

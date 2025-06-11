@@ -1,7 +1,8 @@
 import path from "node:path";
 import { BrowserWindow } from "electron";
 import { v4 as uuidv4 } from "uuid";
-import { WindowType, isDev } from "@/shared/enums.ts";
+import { isDev } from "@/shared/constants.ts";
+import { WindowType } from "@/shared/enums.ts";
 import type { WindowState } from "@/data/store.ts";
 import { logger } from "@/shared/logger.ts";
 

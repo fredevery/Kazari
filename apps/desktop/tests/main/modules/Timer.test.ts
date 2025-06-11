@@ -1,23 +1,24 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { Bus } from "@/main/modules/Bus.js";
 import { Timer } from "@/main/modules/Timer.js";
 import { Phases, TimerEvents } from "@/shared/enums.js";
+import { ModuleFactory } from "@/main/modules/Factory.ts";
 
 describe("Timer", () => {
+  let timerInstance: Timer;
+
   beforeEach(() => {
-    const bus = Bus.getInstance();
-    Timer.setBus(bus);
+    timerInstance = Timer.getInstance();
     vi.useFakeTimers();
   });
 
   afterEach(() => {
+    timerInstance.destroy();
     vi.useRealTimers();
   });
 
   it("should have a singleton instance", () => {
-    const instance1 = Timer.getInstance();
     const instance2 = Timer.getInstance();
-    expect(instance1).toBe(instance2);
+    expect(instance2).toBe(timerInstance);
   });
 
   it("should load phases from config", () => {
@@ -61,20 +62,17 @@ describe("Timer", () => {
     );
   });
 
-  it("should not allow timer overrun if a phase does not allow it", () => {
+  it("should start next phase if overrun is not allowed", () => {
     const timer = Timer.getInstance();
     timer.setTickDuration(5);
     timer.setCurrentPhase(1); // FOCUS phase
-    timer.start();
     expect(timer.currentPhase.type).toBe(Phases.FOCUS);
+    timer.start();
     expect(timer.currentPhase.remainingTime).toEqual(
       timer.currentPhase.allocatedTime,
     );
-    vi.advanceTimersByTime(20);
-    expect(timer.currentPhase.remainingTime).toBeLessThanOrEqual(0);
-    expect(timer.currentPhase.elapsedTime).toBeLessThanOrEqual(
-      timer.currentPhase.allocatedTime,
-    );
+    vi.advanceTimersByTime(10);
+    expect(timer.currentPhase.type).toBe(Phases.BREAK);
   });
 
   it("should start the next phase after the current one ends", () => {
@@ -88,14 +86,39 @@ describe("Timer", () => {
 
   it("should emit an event on every tick", () => {
     const timer = Timer.getInstance();
-    const emitSpy = vi.spyOn(timer, "emit");
 
+    timer.setCurrentPhase(0); // PLANNING phase
     timer.setTickDuration(5);
     timer.start();
+    const emitSpy = vi.spyOn(timer, "emit");
     timer.on(TimerEvents.TICK, (data) => {
       expect(data.phase).toBe(timer.currentPhase);
     });
     vi.advanceTimersByTime(15);
     expect(emitSpy).toHaveBeenCalledTimes(3);
+  });
+
+  it("should emit events when starting, ending, and switching phases", () => {
+    const timer = Timer.getInstance();
+    const emitSpy = vi.spyOn(timer, "emit");
+    timer.setTickDuration(5);
+    timer.setCurrentPhase(0); // PLANNING phase
+    timer.start();
+    expect(timer.currentPhase.type).toBe(Phases.PLANNING);
+    expect(emitSpy).toHaveBeenCalledWith(TimerEvents.PHASE_START, {
+      phase: timer.currentPhase,
+    });
+    expect(timer.currentPhase.type).toBe(Phases.PLANNING);
+    vi.advanceTimersByTime(10);
+    timer.endPhase();
+    expect(emitSpy).toHaveBeenCalledWith(TimerEvents.PHASE_END, {
+      phase: timer.currentPhase,
+    });
+    expect(timer.currentPhase.type).toBe(Phases.PLANNING);
+    timer.startNextPhase();
+    const nextPhase = timer.currentPhase;
+    expect(emitSpy).toHaveBeenCalledWith(TimerEvents.PHASE_SET, {
+      phase: nextPhase,
+    });
   });
 });

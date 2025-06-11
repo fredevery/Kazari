@@ -24,6 +24,10 @@ export class Timer extends BaseModule {
     return this._phases[this._currentPhaseIndex] || this._phases[0];
   }
 
+  getCurrentPhaseIndex(): number {
+    return this._currentPhaseIndex;
+  }
+
   loadPhasesFromConfig() {
     const configPhases = config.get("phases") as PhaseType[];
     configPhases.forEach((phase) => {
@@ -41,18 +45,19 @@ export class Timer extends BaseModule {
     this.currentPhase.setActive(false);
     this._currentPhaseIndex = phaseIndex;
     this.currentPhase.setActive(true);
+    this.emit(TimerEvents.PHASE_SET, { phase: this.currentPhase });
   }
 
   start() {
-    this.setInitialPhase();
     this.startPhase();
   }
 
+  prepareNextPhase() {
+    this.setCurrentPhase((this._currentPhaseIndex + 1) % this._phases.length);
+  }
+
   startNextPhase() {
-    this._currentPhaseIndex++;
-    if (this._currentPhaseIndex >= this._phases.length) {
-      this._currentPhaseIndex = 0; // Loop back to the first phase
-    }
+    this.prepareNextPhase();
     this.startPhase();
   }
 
@@ -60,6 +65,7 @@ export class Timer extends BaseModule {
     const phase = this.currentPhase;
     phase.setStartTime(Date.now());
     this._timerInterval = setInterval(this.tick.bind(this), this._tickDuration);
+    this.emit(TimerEvents.PHASE_START, { phase });
   }
 
   tick() {
@@ -73,26 +79,26 @@ export class Timer extends BaseModule {
 
   endPhase() {
     this.currentPhase.setActive(false);
-
     if (this._timerInterval) {
       clearInterval(this._timerInterval);
       this._timerInterval = null;
     }
+    this.emit(TimerEvents.PHASE_END, { phase: this.currentPhase });
   }
 
   setTickDuration(duration: number) {
     this._tickDuration = duration;
   }
 
-  // STATIC PROPERTIES
-  private static instance: Timer;
+  // // STATIC PROPERTIES
+  // private static instance: Timer;
 
-  static getInstance() {
-    if (!Timer.instance) {
-      Timer.instance = new Timer();
-    }
-    return Timer.instance;
-  }
+  // static getInstance() {
+  //   if (!Timer.instance) {
+  //     Timer.instance = new Timer();
+  //   }
+  //   return Timer.instance;
+  // }
 }
 
 const timer = Timer.getInstance();
