@@ -10,7 +10,10 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:e2e": "playwright test"
   },
   "keywords": [],
   "author": {
@@ -30,21 +33,29 @@
     "@electron/fuses": "^1.8.0",
     "@kazari/eslint-configs": "workspace:*",
     "@kazari/typescript-configs": "workspace:*",
+    "@playwright/test": "^1.52.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/electron-squirrel-startup": "^1.0.2",
     "@types/react": "19.1.4",
     "@types/react-dom": "19.1.5",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
     "@vitejs/plugin-react": "^4.4.1",
+    "@vitest/ui": "^3.1.4",
     "electron": "36.2.1",
     "electron-squirrel-startup": "^1.0.1",
     "eslint": "^9.27.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
+    "jsdom": "^26.1.0",
+    "playwright": "^1.52.0",
     "ts-node": "^10.9.2",
     "typescript": "~5.8.3",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vitest": "^3.1.4"
   },
   "dependencies": {
     "dotenv": "^16.5.0",

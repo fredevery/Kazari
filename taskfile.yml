@@ -19,3 +19,7 @@ tasks:
   "start:desktop":
     cmds:
       - pnpm --filter desktop start
+  
+  "test:desktop":
+    cmds:
+      - pnpm --filter desktop test

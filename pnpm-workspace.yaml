@@ -1,4 +1,14 @@
 packages:
-  - "apps/*"
-  - "packages/*"
-  - "configs/*"
+  - apps/*
+  - packages/*
+  - configs/*
+onlyBuiltDependencies:
+  - electron
+  - electron-winstaller
+  - esbuild
+# nodeLinker: hoisted
+hoistPattern:
+  - "!electron"
+publicHoistPattern:
+  - "!electron"
+loglevel: debug

@@ -1,6 +1,8 @@
 import path from "node:path";
 import { app } from "electron";
 
+console.log(app);
+
 export enum WindowType {
   BaseWindow = "BASE_WINDOW",
   Main = "MAIN",

@@ -1,47 +1,43 @@
-import Store from "electron-store";
-import { WindowType } from "../shared/constants.js";
 import { z } from "zod/v4";
-
-export const WindowStateSchema = z.object({
-  bounds: z.object({
-    x: z.number(),
-    y: z.number(),
-    width: z.number(),
-    height: z.number(),
-  }),
-  isMaximized: z.boolean(),
-  isFullScreen: z.boolean(),
-  isVisible: z.boolean(),
-});
-
-const WindowConfigSchema = z.object({
-  id: z.string(), //z.uuid({ version: "v4" }),
-  type: z.enum(WindowType),
-  state: WindowStateSchema,
-});
+import Store from "electron-store";
+import { WindowConfigSchema, WindowStateSchema } from "./models/Windows.ts";
+import { AppConfigSchema } from "./models/AppConfig.ts";
 
 const AppStoreSchema = z.object({
   windows: z.record(z.string(), WindowConfigSchema),
+  configs: AppConfigSchema,
 });
+type AppStoreSchemaType = z.infer<typeof AppStoreSchema>;
 
 export type WindowConfig = z.infer<typeof WindowConfigSchema>;
 export type WindowState = z.infer<typeof WindowStateSchema>;
 
 class AppStore {
-  private static instance: AppStore;
-  private schema = {
-    windows: z.record(z.string(), WindowConfigSchema),
-  };
-  private store: Store<{ windows: Record<string, WindowConfig> }>;
+  private schema = AppStoreSchema;
+  private store: Store<AppStoreSchemaType>;
 
   constructor() {
-    this.store = new Store<{ windows: Record<string, WindowConfig> }>({
-      schema: {
-        windows: z.toJSONSchema(this.schema.windows),
-      },
-    });
+    this.store = new Store<AppStoreSchemaType>({});
   }
 
+  get(key: keyof AppStoreSchemaType) {
+    return this.store.get(key, {});
+  }
+
+  set(key: keyof AppStoreSchemaType, value: any) {
+    if (!this.schema.shape[key]) {
+      throw new Error(`Invalid key: ${key}`);
+    }
+    const parsedValue = this.schema.shape[key].safeParse(value);
+    if (!parsedValue.success) {
+      throw new Error(`Invalid value for key ${key}: ${parsedValue.error}`);
+    }
+    console.log(`Setting key: ${key}, value:`, parsedValue.data);
+    this.store.set(key, parsedValue.data);
+  }
+
+  // STATIC PROPERTIES
+  private static instance: AppStore;
   static getInstance() {
     if (!AppStore.instance) {
       AppStore.instance = new AppStore();
