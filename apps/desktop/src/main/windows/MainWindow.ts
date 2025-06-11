@@ -1,6 +1,6 @@
 import type { Display } from "electron";
 import { BaseWindow } from "./BaseWindow.ts";
-import { WindowType } from "@/shared/constants.ts";
+import { WindowType } from "@/shared/enums.ts";
 import { logger } from "@/shared/logger.ts";
 
 export class MainWindow extends BaseWindow {

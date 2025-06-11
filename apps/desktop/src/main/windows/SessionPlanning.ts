@@ -1,4 +1,4 @@
-import { WindowType } from "@/shared/constants.ts";
+import { WindowType } from "@/shared/enums.ts";
 import { BaseWindow } from "./BaseWindow.js";
 
 export class SessionPlanningWindow extends BaseWindow {

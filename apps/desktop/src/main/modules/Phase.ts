@@ -1,4 +1,4 @@
-import { Phases } from "@/shared/constants.ts";
+import { Phases } from "@/shared/enums.ts";
 
 type PhaseConfig = {
   type: Phases;

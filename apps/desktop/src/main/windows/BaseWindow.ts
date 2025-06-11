@@ -1,7 +1,7 @@
 import path from "node:path";
 import { BrowserWindow } from "electron";
 import { v4 as uuidv4 } from "uuid";
-import { WindowType, isDev } from "@/shared/constants.ts";
+import { WindowType, isDev } from "@/shared/enums.ts";
 import type { WindowState } from "@/data/store.ts";
 import { logger } from "@/shared/logger.ts";
 
@@ -41,7 +41,6 @@ export class BaseWindow {
   }
 
   private setupWindow() {
-    console.log("setupWindow", this.state);
     const window = new BrowserWindow({
       fullscreen: this.state.isFullScreen,
       show: this.state.isVisible,

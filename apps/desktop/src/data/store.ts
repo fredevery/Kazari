@@ -32,7 +32,6 @@ class AppStore {
     if (!parsedValue.success) {
       throw new Error(`Invalid value for key ${key}: ${parsedValue.error}`);
     }
-    console.log(`Setting key: ${key}, value:`, parsedValue.data);
     this.store.set(key, parsedValue.data);
   }
 

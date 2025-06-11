@@ -1,5 +1,5 @@
 import { z } from "zod/v4";
-import { Phases } from "@/shared/constants.js";
+import { Phases } from "@/shared/enums.js";
 
 export const PhaseSchema = z.object({
   type: z.enum(Phases),

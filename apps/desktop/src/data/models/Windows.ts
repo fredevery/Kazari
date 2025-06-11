@@ -1,5 +1,5 @@
 import { z } from "zod/v4";
-import { WindowType } from "@/shared/constants.js";
+import { WindowType } from "@/shared/enums.js";
 
 export const WindowStateSchema = z.object({
   bounds: z.object({

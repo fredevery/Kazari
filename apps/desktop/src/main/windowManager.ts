@@ -1,6 +1,6 @@
 import { screen, BrowserWindow } from "electron";
 
-import { WindowType } from "@/shared/constants.ts";
+import { WindowType } from "@/shared/enums.ts";
 import { logger } from "@/shared/logger.ts";
 
 import { MainWindow } from "./windows/MainWindow.ts";

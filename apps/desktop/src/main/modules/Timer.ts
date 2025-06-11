@@ -1,15 +1,17 @@
-import { Phases } from "@/shared/constants.ts";
 import { Phase } from "./Phase.ts";
 import { config } from "@/main/modules/Config.ts";
 import { type PhaseType } from "@/data/models/Phase.ts";
+import { BaseModule } from "./Base.ts";
+import { TimerEvents } from "@/shared/enums.ts";
 
-export class Timer {
+export class Timer extends BaseModule {
   private _tickDuration: number = 1000; // 1 second
   private _phases: Phase[] = [];
   private _currentPhaseIndex: number = -1;
   private _timerInterval: NodeJS.Timeout | null = null;
 
   constructor() {
+    super();
     this.loadPhasesFromConfig();
     this.setInitialPhase();
   }
@@ -31,36 +33,46 @@ export class Timer {
 
   setInitialPhase() {
     if (this._currentPhaseIndex === -1) {
-      this._currentPhaseIndex = 0;
+      this.setCurrentPhase(0);
     }
   }
 
   setCurrentPhase(phaseIndex: number) {
+    this.currentPhase.setActive(false);
     this._currentPhaseIndex = phaseIndex;
+    this.currentPhase.setActive(true);
   }
 
   start() {
-    if (this._currentPhaseIndex === -1) {
-      this.setInitialPhase();
+    this.setInitialPhase();
+    this.startPhase();
+  }
+
+  startNextPhase() {
+    this._currentPhaseIndex++;
+    if (this._currentPhaseIndex >= this._phases.length) {
+      this._currentPhaseIndex = 0; // Loop back to the first phase
     }
     this.startPhase();
   }
 
-  startNextPhase() {}
-
   startPhase() {
     const phase = this.currentPhase;
     phase.setStartTime(Date.now());
-    phase.setActive(true);
-    this._timerInterval = setInterval(() => {
-      if (phase.remainingTime <= 0 && !phase.canOverrun) {
-        this.endPhase(phase);
-      }
-    }, this._tickDuration);
+    this._timerInterval = setInterval(this.tick.bind(this), this._tickDuration);
   }
 
-  endPhase(phase: Phase) {
-    phase.setActive(false);
+  tick() {
+    const phase = this.currentPhase;
+    this.emit(TimerEvents.TICK, { phase });
+    if (phase.remainingTime <= 0 && !phase.canOverrun) {
+      this.endPhase();
+      this.startNextPhase();
+    }
+  }
+
+  endPhase() {
+    this.currentPhase.setActive(false);
 
     if (this._timerInterval) {
       clearInterval(this._timerInterval);
@@ -85,74 +97,3 @@ export class Timer {
 
 const timer = Timer.getInstance();
 export { timer };
-
-// export class Timer {
-//   private static instance: Timer;
-//   private state: TimerState = {
-//     currentPhase: Phases.PLANNING,
-//     timeStarted: 0,
-//     remainingTime: 0,
-//     isRunning: false,
-//     allocatedTime: 0,
-//   };
-
-//   private timerInterval: NodeJS.Timeout | null = null;
-
-//   static getInstance() {
-//     if (!Timer.instance) {
-//       Timer.instance = new Timer();
-//     }
-//     return Timer.instance;
-//   }
-
-//   constructor() {
-//     this.setupIpc();
-//   }
-
-//   setupIpc() {
-//     ipcMain.handle("timer:getStart", () => {});
-//     ipcMain.on("timer:control", (_event, action: TimerActions) =>
-//       this.handleAction(action),
-//     );
-//   }
-
-//   startPhase(phase: Phases) {}
-
-//   private handleAction(action: TimerActions) {
-//     switch (action) {
-//       case TimerActions.START:
-//         this.startTimer();
-//         break;
-//       case TimerActions.PAUSE:
-//         this.pauseTimer();
-//         break;
-//       case TimerActions.RESUME:
-//         this.resumeTimer();
-//         break;
-//       case TimerActions.STOP:
-//         this.stopTimer();
-//         break;
-//     }
-//   }
-
-//   private startTimer() {
-//     if (this.state.isRunning) return;
-//     this.state.isRunning = true;
-//     this.state.timeStarted = Date.now();
-//     this.state.remainingTime = 0; // Set to desired duration in milliseconds
-//     this.timerInterval = setInterval(() => {
-//       this.tick();
-//     }, 1000);
-//   }
-//   private pauseTimer() {}
-//   private resumeTimer() {}
-//   private stopTimer() {}
-//   private tick() {
-//     if (!this.state.isRunning) return;
-//     const elapsed = Date.now() - this.state.timeStarted;
-//     this.state.remainingTime = this.state.allocatedTime - elapsed;
-//     this.updateState();
-//   }
-
-//   private updateState() {}
-// }
