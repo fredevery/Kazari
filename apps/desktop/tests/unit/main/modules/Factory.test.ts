@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { ModuleFactory } from "@/main/modules/Factory.js";
-import { BaseModule } from "@/main/modules/Base.ts";
+import { BaseModule } from "@/main/modules/BaseModule.ts";
 
 describe("Factory", () => {
   function createMockModuleClass() {

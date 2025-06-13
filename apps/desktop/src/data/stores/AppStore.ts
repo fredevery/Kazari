@@ -1,7 +1,10 @@
 import { z } from "zod/v4";
 import Store from "electron-store";
-import { WindowConfigSchema, WindowStateSchema } from "./models/Windows.ts";
-import { AppConfigSchema } from "./models/AppConfig.ts";
+import {
+  WindowConfigSchema,
+  WindowStateSchema,
+} from "@/data/models/Windows.ts";
+import { AppConfigSchema } from "@/data/models/AppConfig.ts";
 
 const AppStoreSchema = z.object({
   windows: z.record(z.string(), WindowConfigSchema),
@@ -12,7 +15,7 @@ type AppStoreSchemaType = z.infer<typeof AppStoreSchema>;
 export type WindowConfig = z.infer<typeof WindowConfigSchema>;
 export type WindowState = z.infer<typeof WindowStateSchema>;
 
-class AppStore {
+export class AppStore {
   private schema = AppStoreSchema;
   private store: Store<AppStoreSchemaType>;
 

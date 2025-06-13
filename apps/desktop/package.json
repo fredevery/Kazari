@@ -6,14 +6,18 @@
   "description": "",
   "main": ".vite/build/main.cjs",
   "scripts": {
-    "start": "rm -rf .vite/build && electron-forge start",
+    "start": "rm -rf .vite/build && electron-forge start -- --inspect-electron --remote-debugging-port=9222",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "build:main": "vite build --config vite.main.config.ts",
+    "build:renderer": "vite build --config vite.renderer.config.ts",
+    "build:preload": "vite build --config vite.preload.config.ts",
+    "build": "concurrently \"pnpm build:main\" \"pnpm build:renderer\" \"pnpm build:preload\""
   },
   "keywords": [],
   "author": {
@@ -38,6 +42,7 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/electron-squirrel-startup": "^1.0.2",
+    "@types/node": "^24.0.1",
     "@types/react": "19.1.4",
     "@types/react-dom": "19.1.5",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
@@ -59,9 +64,11 @@
   },
   "dependencies": {
     "@vitest/coverage-v8": "^3.2.3",
+    "concurrently": "^9.1.2",
     "dotenv": "^16.5.0",
     "electron-log": "^5.4.0",
     "electron-store": "^10.0.1",
+    "prisma": "^6.9.0",
     "react-router": "^7.6.1",
     "rollbar": "^2.26.4",
     "uuid": "^11.1.0",

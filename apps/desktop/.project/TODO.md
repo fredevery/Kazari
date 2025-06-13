@@ -29,11 +29,10 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
   - [ ] Show small countdown window during session
   - [ ] Window stays in background until last minute
   - [ ] Window appears on top of all windows in last minute
-- [ ] **Modular Architecture**
-  - [ ] Refactor codebase for modularity and easy feature addition
-- [ ] **Secure IPC Communication**
-  - [ ] Validate all IPC messages
-  - [ ] Use contextBridge and Electron best practices for security
+- [x] **Modular Architecture**
+  - [x] Refactor codebase for modularity and easy feature addition (Factory, Bus, BaseModule implemented)
+- [~] **Secure IPC Communication**
+  - [~] contextBridge and preload exist, but not all IPC is validated or fully secured
 
 ---
 
@@ -48,17 +47,15 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
     - [x] Log all errors using electron-log (basic logging present, not all errors routed)
     - [x] Implement graceful shutdown on fatal errors
     - [x] (Optional) Notify user of critical errors
-    - [x] (Optional) Integrate crash/error reporting service (e.g., Sentry)
+    - [x] (Optional) Integrate crash/error reporting service (e.g., Sentry/Rollbar)
     - [x] Test error handling by simulating errors
 - [x] Add logging system:
   - [x] Set up electron-log
   - [x] Configure log levels
   - [x] Implement log rotation
   - [x] Add log file management
-- [ ] Create error reporting mechanism:
-  - [ ] Add error tracking service
-  - [ ] Implement error aggregation
-  - [ ] Create error notification system
+- [~] Create error reporting mechanism:
+  - [~] Rollbar integration present, but no aggregation or notification UI
 
 ---
 
@@ -101,19 +98,19 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 - [~] `pages/Dashboard.tsx` (stub exists, not fully implemented)
 - [~] `pages/SessionPlanning.tsx` (stub exists, not fully implemented)
 - [ ] Global state management (Zustand or Redux)
-- [ ] Tailwind CSS (optional)
+- [ ] Tailwind CSS (not present)
 
 ---
 
 ## IPC & Preload
-- [~] `preload.ts` exists, but context isolation and API exposure are not complete
+- [~] `preload.ts` exists, context isolation enabled, but API exposure and secure IPC not complete
 - [ ] Define IPC channels
 - [ ] Implement secure renderer ↔ main communication
 
 ---
 
 ## Core Pomodoro Logic
-- [ ] Timer logic
+- [x] Timer logic (Timer module and tests implemented)
 - [ ] Break screen with countdown + negative time
 - [ ] Daily session tracking + completion streaks
 - [ ] Button to resume or revisit planning after break
@@ -172,7 +169,8 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 ---
 
 ## Testing (High Priority)
-- [ ] Implement unit and E2E testing with Playwright or Spectron (from SPEC.md)
+- [x] Implement unit tests for Timer, Bus, Factory modules
+- [~] Playwright E2E test exists, but not full coverage/CI
 - [ ] Add test coverage reporting and CI integration (from SPEC.md)
 - [ ] Create test utilities
 - [ ] Add CI/CD pipeline
@@ -210,18 +208,6 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 - [ ] Progress dashboard/stats view
 - [ ] Ambient break screen with background media
 - [ ] AI suggestions or prioritization of tasks
-
----
-
-## Notes
-- Focus on implementing additional window types
-- Implement basic Pomodoro timer before adding task integration
-- Ensure proper type safety across IPC boundaries
-- Consider adding error tracking and logging early
-- Security and error handling should be implemented before adding features
-- Testing should be set up early to ensure quality
-- System integration features can be added incrementally
-- Internationalization can be added later in the development cycle
 
 ---
 

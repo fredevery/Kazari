@@ -1,5 +1,5 @@
 import { Bus } from "./Bus.ts";
-import { ModuleFactory } from "./Factory.ts";
+import { ModuleFactory, type ModuleConstructor } from "./Factory.ts";
 
 export class BaseModule {
   get bus(): Bus {
@@ -21,17 +21,16 @@ export class BaseModule {
     this.bus?.destroy();
   }
 
-  private static instance: any = null;
+  // STATIC PROPERTIES
+  private static instance: typeof BaseModule;
   private static bus: Bus | null = null;
   static getInstance<T extends typeof BaseModule>(
     this: T,
     ...args: unknown[]
   ): InstanceType<T> {
+    const ModuleClass = this as unknown as ModuleConstructor<T>;
     if (!this.instance) {
-      this.instance = ModuleFactory.create<InstanceType<T>>(
-        this as any,
-        ...args,
-      );
+      this.instance = ModuleFactory.create<T>(ModuleClass, ...args);
     }
     return this.instance as InstanceType<T>;
   }
@@ -47,9 +46,5 @@ export class BaseModule {
       );
     }
     return this.bus;
-  }
-
-  static test() {
-    console.log(this);
   }
 }

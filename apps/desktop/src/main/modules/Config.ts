@@ -1,4 +1,4 @@
-import { appStore } from "@/data/store.js";
+import { appStore } from "@/data/stores/app.ts";
 
 export class Config {
   private _configs: Record<string, any> = {};
