@@ -8,7 +8,6 @@ export function timeToDate(time: string): Date {
   const [hours, minutes] = time.split(":").map(Number);
   const date = new Date();
   date.setHours(hours, minutes, 0, 0);
-  console.log(time, date);
   return date;
 }
 

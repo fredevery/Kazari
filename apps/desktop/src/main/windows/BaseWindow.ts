@@ -3,37 +3,19 @@ import { BrowserWindow } from "electron";
 import { v4 as uuidv4 } from "uuid";
 import { isDev } from "@/shared/constants.ts";
 import { WindowType } from "@/shared/enums.ts";
-import type { WindowState } from "@/data/store.ts";
+import type { WindowState } from "@/data/stores/AppStore.ts";
 import { logger } from "@/shared/logger.ts";
 
 export class BaseWindow {
-  private state: WindowState;
-  private loadURL: string | undefined = MAIN_WINDOW_VITE_DEV_SERVER_URL;
-
-  id: string;
-  window: BrowserWindow;
-  routerPath: string = "/";
-
-  constructor() {
-    this.id = `${this.type}-${uuidv4()}`;
-    logger.info(`Creating new ${this.type} window with ID: ${this.id}`);
-
-    this.state = this.setupState();
-    this.window = this.setupWindow();
-    this.setupEvents();
-  }
-
-  get type() {
-    return WindowType.BaseWindow;
-  }
-
-  get baseState() {
+  static type = WindowType.BaseWindow;
+  static routerPath: string = "/";
+  static get baseState(): WindowState {
     return {
       bounds: {
         x: 0,
         y: 0,
-        width: 0,
-        height: 0,
+        width: 800,
+        height: 600,
       },
       isMaximized: false,
       isFullScreen: false,
@@ -41,9 +23,27 @@ export class BaseWindow {
     };
   }
 
+  private state: WindowState;
+  private loadURL: string | undefined = MAIN_WINDOW_VITE_DEV_SERVER_URL;
+
+  id: string;
+  type: WindowType;
+  window: BrowserWindow;
+  routerPath: string = "/";
+
+  constructor() {
+    this.type = this.getClass().type;
+    this.id = `${this.type}-${uuidv4()}`;
+    this.routerPath = this.getClass().routerPath;
+    this.state = this.setupState();
+    this.window = this.setupWindow();
+    this.setupEvents();
+  }
+
   private setupWindow() {
+    console.log("isVisible", this.state.isVisible);
     const window = new BrowserWindow({
-      fullscreen: this.state.isFullScreen,
+      // fullscreen: this.state.isFullScreen,
       show: this.state.isVisible,
       webPreferences: {
         preload: path.join(__dirname, "preload.js"),
@@ -55,6 +55,10 @@ export class BaseWindow {
     return window;
   }
 
+  private getClass() {
+    return this.constructor as typeof BaseWindow;
+  }
+
   windowLoad() {
     if (this.loadURL) {
       const loadPath = `${this.loadURL}#${this.routerPath}`;
@@ -63,26 +67,27 @@ export class BaseWindow {
     } else {
       logger.warn(`No URL to load for window ${this.id}`);
     }
-
-    if (isDev) {
-      this.window.webContents.openDevTools({ mode: "right" });
-    }
   }
 
   private setupState() {
-    return this.baseState;
+    return this.getClass().baseState;
   }
 
   private setupEvents() {
     logger.info(`Setting up events for window ${this.id}`);
-    this.window.on("move", () => this.saveState());
-    this.window.on("resize", () => this.saveState());
-    this.window.on("maximize", () => this.saveState());
-    this.window.on("unmaximize", () => this.saveState());
-    this.window.on("enter-full-screen", () => this.saveState());
-    this.window.on("leave-full-screen", () => this.saveState());
-    this.window.on("ready-to-show", () => {
-      logger.info(`Window ${this.id} ready to show`);
+    // this.window.on("move", () => this.saveState());
+    // this.window.on("resize", () => this.saveState());
+    // this.window.on("maximize", () => this.saveState());
+    // this.window.on("unmaximize", () => this.saveState());
+    // this.window.on("enter-full-screen", () => this.saveState());
+    // this.window.on("leave-full-screen", () => this.saveState());
+    // this.window.on("ready-to-show", () => {
+    //   logger.info(`Window ${this.id} ready to show`);
+    //   this.showWindow();
+    // });
+
+    this.window.webContents.on("did-finish-load", () => {
+      console.log("Renderer is ready for window:", this.id);
       this.showWindow();
     });
 
@@ -113,8 +118,13 @@ export class BaseWindow {
 
   showWindow() {
     logger.info(`Showing window ${this.id}`);
+    this.window.setFullScreenable(this.state.isFullScreen);
+    this.window.setFullScreen(this.state.isFullScreen);
     this.window.show();
     this.afterShowWindow();
+    if (isDev) {
+      this.window.webContents.openDevTools({ mode: "right" });
+    }
   }
 
   afterShowWindow() {

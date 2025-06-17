@@ -1,6 +1,10 @@
 version: '3'
 
 tasks:
+  "db:generate:desktop":
+    cmds:
+      - pnpm --filter desktop db:generate
+
   "purge:nodemodules":
     cmds:
       - find . -name "node_modules" -type d -prune -exec rm -rf "{}" +

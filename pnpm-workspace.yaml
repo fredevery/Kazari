@@ -2,13 +2,16 @@ packages:
   - apps/*
   - packages/*
   - configs/*
+hoistPattern:
+  - '!electron'
+loglevel: debug
 onlyBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
   - electron
   - electron-winstaller
   - esbuild
-# nodeLinker: hoisted
-hoistPattern:
-  - "!electron"
+  - prisma
+  - zenstack
 publicHoistPattern:
-  - "!electron"
-loglevel: debug
+  - '!electron'

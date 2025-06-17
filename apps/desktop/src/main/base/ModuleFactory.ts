@@ -1,5 +1,5 @@
 import { type BaseModule } from "./BaseModule.ts";
-import { Bus } from "@/main/modules/Bus.ts";
+import { Bus } from "@/main/core/Bus.ts";
 
 export interface ModuleConstructor<T extends typeof BaseModule> {
   new (...args: unknown[]): T;

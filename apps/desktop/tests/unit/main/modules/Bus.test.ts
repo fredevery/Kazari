@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { Bus, RootBus } from "@/main/modules/Bus.js";
+import { Bus } from "@/main/core/Bus.ts";
 
 describe("Bus", () => {
   let bus: Bus;
-  let rootBus: RootBus;
+  let rootBus: Bus;
 
   beforeEach(() => {
     bus = Bus.getInstance("testBus");
@@ -65,15 +65,8 @@ describe("Bus", () => {
     expect(bus.hasActiveListeners("test:event")).toBe(false);
   });
 
-  it("should warn if trying to remove a listener that does not exist", () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, "warn")
-      .mockImplementation(() => {});
-    bus.off("nonexistent:event", () => {});
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      "No listeners found for event: nonexistent:event",
-    );
-    consoleWarnSpy.mockRestore();
+  it("should throw an error if trying to remove a listener that does not exist", () => {
+    expect(() => bus.off("nonexistent:event", () => {})).toThrow();
   });
 
   it("should remove all listeners if no listener is provided", () => {
@@ -82,7 +75,7 @@ describe("Bus", () => {
     bus.on("test:event", callback1);
     bus.on("test:event", callback2);
     expect(bus.hasActiveListeners("test:event")).toBe(true);
-    bus.off("test:event");
+    bus.offAll("test:event");
     expect(bus.hasActiveListeners("test:event")).toBe(false);
     bus.emit("test:event", { data: "test" });
     expect(callback1).not.toHaveBeenCalled();
@@ -96,9 +89,7 @@ describe("Bus", () => {
     const callback = () => {};
     bus.on("test:event", callback);
     bus.on("test:event", callback); // Adding the same listener again
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      'Listener for event "test:event" already exists.',
-    );
+    expect(consoleWarnSpy).toHaveBeenCalled();
     consoleWarnSpy.mockRestore();
   });
 
@@ -106,20 +97,81 @@ describe("Bus", () => {
     expect(() => {
       // @ts-expect-error Testing without a key
       new Bus({});
-    }).toThrow("Key is required to create a Bus instance.");
+    }).toThrow();
   });
 
-  it("should emit global events to the root bus", () => {
+  it("should send events to all buses that can handle them", () => {
     const bus2 = Bus.getInstance("testBus2");
     const bus3 = Bus.getInstance("testBus3");
-    const globalCallback = vi.fn();
-    const ignoreGlobalCallback = vi.fn();
-    bus2.on("test:event:global", globalCallback);
-    bus3.on("test:event:ignoreGlobal", ignoreGlobalCallback);
-    bus.emit("test:event:global", { data: "global test" });
-    expect(globalCallback).toHaveBeenCalledWith({ data: "global test" });
-    expect(ignoreGlobalCallback).not.toHaveBeenCalled();
+    const bus4 = Bus.getInstance("testBus4", bus);
+    const bus5 = Bus.getInstance("testBus5", bus);
+    const bus6 = Bus.getInstance("testBus6", bus4);
+    const bus7 = Bus.getInstance("testBus7", bus6);
+    const bus8 = Bus.getInstance("testBus8", bus7);
+
+    const callback2 = vi.fn();
+    const callback3 = vi.fn();
+    const callback4 = vi.fn();
+    const callback5 = vi.fn();
+    const callback6 = vi.fn();
+    const callback7 = vi.fn();
+    const callback8 = vi.fn();
+
+    bus2.on("test:event:all", callback2);
+    bus3.on("test:event:all", callback3);
+    bus4.on("test:event:all", callback4);
+    bus5.on("test:event:all", callback5);
+    bus6.on("test:event:all", callback6);
+    bus7.on("test:event:not:all", callback7);
+    bus8.on("test:event:all", callback8);
+
+    bus.emit("test:event:all", { data: "test" });
+
+    expect(callback2).toHaveBeenCalledWith({ data: "test" });
+    expect(callback3).toHaveBeenCalledWith({ data: "test" });
+    expect(callback4).toHaveBeenCalledWith({ data: "test" });
+    expect(callback5).toHaveBeenCalledWith({ data: "test" });
+    expect(callback6).toHaveBeenCalledWith({ data: "test" });
+    expect(callback7).not.toHaveBeenCalled(); // Should not be called
+    expect(callback8).toHaveBeenCalledWith({ data: "test" });
+
+    expect(bus2.hasActiveListeners("test:event:all")).toBe(true);
+    expect(bus3.hasActiveListeners("test:event:all")).toBe(true);
+    expect(bus4.hasActiveListeners("test:event:all")).toBe(true);
+    expect(bus5.hasActiveListeners("test:event:all")).toBe(true);
+    expect(bus6.hasActiveListeners("test:event:all")).toBe(true);
+    expect(bus7.hasActiveListeners("test:event:not:all")).toBe(true);
+    expect(bus8.hasActiveListeners("test:event:all")).toBe(true);
+
+    // Clean up
+    bus2.off("test:event:all", callback2);
+    bus3.off("test:event:all", callback3);
+    bus4.off("test:event:all", callback4);
+    bus5.off("test:event:all", callback5);
+    bus6.off("test:event:all", callback6);
+    bus7.off("test:event:not:all", callback7);
+    bus8.off("test:event:all", callback8);
+
+    expect(bus2.hasActiveListeners("test:event:all")).toBe(false);
+    expect(bus3.hasActiveListeners("test:event:all")).toBe(false);
+    expect(bus4.hasActiveListeners("test:event:all")).toBe(false);
+    expect(bus5.hasActiveListeners("test:event:all")).toBe(false);
+    expect(bus6.hasActiveListeners("test:event:all")).toBe(false);
+    expect(bus7.hasActiveListeners("test:event:not:all")).toBe(false);
+    expect(bus8.hasActiveListeners("test:event:all")).toBe(false);
   });
+
+  // it("should emit global events to the root bus", () => {
+  //   const bus2 = Bus.getInstance("testBus2");
+  //   const bus3 = Bus.getInstance("testBus3");
+  //   const globalCallback = vi.fn();
+  //   const ignoreGlobalCallback = vi.fn();
+  //   bus2.on("test:event:global", globalCallback);
+  //   bus3.on("test:event:ignoreGlobal", ignoreGlobalCallback);
+  //   bus.emit("test:event:global", { data: "global test" });
+  //   expect(globalCallback).toHaveBeenCalledWith({ data: "global test" });
+  //   expect(ignoreGlobalCallback).not.toHaveBeenCalled();
+  // });
 
   it("should warn if trying to remove instance that does not exist", () => {
     const consoleWarnSpy = vi

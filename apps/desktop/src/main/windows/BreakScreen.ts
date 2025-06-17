@@ -2,15 +2,12 @@ import { WindowType } from "@/shared/enums.ts";
 import { BaseWindow } from "./BaseWindow.js";
 
 export class BreakScreen extends BaseWindow {
-  routerPath = "/break";
+  static type = WindowType.BreakScreen;
+  static routerPath = "/break";
 
   constructor() {
     super();
     this.windowLoad();
-  }
-
-  get type() {
-    return WindowType.BreakScreen;
   }
 
   get baseState() {

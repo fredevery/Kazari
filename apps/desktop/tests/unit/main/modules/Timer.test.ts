@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { Timer } from "@/main/modules/Timer.js";
 import { Phases, TimerEvents } from "@/shared/enums.js";
-import { ModuleFactory } from "@/main/modules/Factory.ts";
+import { ModuleFactory } from "@/main/base/ModuleFactory.ts";
 
 describe("Timer", () => {
   let timerInstance: Timer;

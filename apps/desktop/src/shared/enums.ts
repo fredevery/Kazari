@@ -1,4 +1,5 @@
 export enum WindowType {
+  PLANNING = "PLANNING",
   BaseWindow = "BASE_WINDOW",
   Main = "MAIN",
   DailyPlanning = "DAILY_PLANNING",
@@ -44,4 +45,14 @@ export enum TimerEvents {
   PHASE_END = "timer:phase:end:global",
   PHASE_SET = "timer:phase:activated:global",
   TICK = "timer:tick:global",
+}
+
+export enum TaskStates {
+  PENDING = "pending",
+  IN_PROGRESS = "in_progress",
+  COMPLETED = "completed",
+  CANCELLED = "cancelled",
+  ON_HOLD = "on_hold",
+  ARCHIVED = "archived",
+  DELETED = "deleted",
 }

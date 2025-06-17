@@ -1,4 +1,4 @@
-import { appStore } from "@/data/stores/app.ts";
+import { appStore } from "@/data/stores/AppStore.ts";
 
 export class Config {
   private _configs: Record<string, any> = {};

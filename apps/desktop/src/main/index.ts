@@ -2,17 +2,22 @@ import { app, BrowserWindow, dialog } from "electron";
 import dotenv from "dotenv";
 import { windowManager } from "./windowManager.js";
 import { logger } from "@/shared/logger.ts";
+import { WindowManager } from "@/main/windows/WindowManager.ts";
+import { Bus } from "@/main/core/Bus.ts";
 
 dotenv.config({
   path: [".env.local", ".env"],
 });
 
 function main() {
+  const windowManager = WindowManager.getInstance();
+  const rootBus = Bus.getRootBus();
+
   logger.info("Starting Kazari application...");
 
   app.on("ready", () => {
     logger.info("Application is ready, setting up windows...");
-    windowManager.launchSessionPlanningWindow();
+    rootBus.emit("app:ready");
   });
 
   app.on("window-all-closed", () => {

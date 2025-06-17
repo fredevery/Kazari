@@ -1,4 +1,4 @@
-import { BaseModule } from "./BaseModule.ts";
+import { BaseModule } from "@/main/base/BaseModule.ts";
 import { Phases } from "@/shared/enums.ts";
 import { config } from "@/main/modules/Config.ts";
 import {
@@ -105,47 +105,9 @@ export class Scheduler extends BaseModule {
         phaseSlots.push(phaseSlot);
         i++;
       }
-      console.log(
-        duration,
-        allocatedTime,
-        duration - allocatedTime,
-        "ms remaining after phase allocation",
-      );
       return phaseSlots;
     });
-    console.log(slots, slots.filter((s) => s.type === Phases.FOCUS).length);
   }
-
-  // private generateSlots() {
-  //   const cycleDuration = phases.reduce(
-  //     (total, phase) => total + phase.allocatedTime,
-  //     0,
-  //   );
-  //   console.log("Cycle duration in minutes:", cycleDuration / 60_000);
-  //   const timeBlocks = this.getTodaysAvailability().flatMap(
-  //     (block: TimeBlock) => {
-  //       const duration =
-  //         timeDifferenceInMs(block.startTime, block.endTime) - 5 * 60_000; // Subtract 5 minutes for breaks
-  //       console.log("Processing time block:", block, duration / cycleDuration);
-  //       const availableSlots = Math.floor(duration / cycleDuration);
-  //       const blockSlots: ScheduleSlot[] = [];
-  //       for (let i = 0; i < availableSlots; i++) {
-  //         const startTime = timeToDate(block.startTime);
-  //         startTime.setMinutes(
-  //           startTime.getMinutes() + (i * cycleDuration) / 60000,
-  //         );
-  //         console.log(i, "s >>", startTime);
-  //         const endTime = new Date(startTime.getTime() + cycleDuration);
-  //         console.log(i, "e >>", endTime);
-  //         blockSlots.push(new ScheduleSlot(startTime, endTime));
-  //         console.log("");
-  //       }
-  //       return blockSlots;
-  //     },
-  //   );
-
-  //   console.log("Generated schedule slots:", timeBlocks);
-  // }
 
   public getAvailableSlots(): ScheduleSlot[] {
     return [];

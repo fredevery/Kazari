@@ -1,5 +1,8 @@
-import { Bus } from "./Bus.ts";
-import { ModuleFactory, type ModuleConstructor } from "./Factory.ts";
+import { Bus } from "@/main/core/Bus.ts";
+import {
+  ModuleFactory,
+  type ModuleConstructor,
+} from "@/main/base/ModuleFactory.ts";
 
 export class BaseModule {
   get bus(): Bus {
