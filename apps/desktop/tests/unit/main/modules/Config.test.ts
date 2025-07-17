@@ -1,7 +1,19 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { Config } from "@/main/modules/Config.js";
+import { Bus } from "@/main/core/Bus.js";
 
 describe("Config", () => {
+  let bus: Bus;
+  let config: Config;
+
+  beforeEach(() => {
+    bus = Bus.getInstance("testBus");
+    config = Config.getInstance();
+  });
+  afterEach(() => {
+    bus.destroy();
+  });
+
   it("should have a singleton instance", () => {
     const instance1 = Config.getInstance();
     const instance2 = Config.getInstance();
@@ -9,13 +21,19 @@ describe("Config", () => {
   });
 
   it("should load configs from user data", () => {
-    const config = Config.getInstance();
+    config.set("test", "testValue");
+    console.log(config.get("test"));
     expect(config.get("test")).toBe("testValue");
   });
 
   it("should set and get config values", () => {
-    const config = Config.getInstance();
     config.set("newKey", "newValue");
     expect(config.get("newKey")).toBe("newValue");
+  });
+
+  it("should be able to handle requests via the bus", () => {
+    config.set("busKey", "busValue");
+    const busValue = bus.get("config:get", "busKey");
+    expect(busValue).toEqual(["busValue"]);
   });
 });

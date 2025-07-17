@@ -161,6 +161,42 @@ describe("Bus", () => {
     expect(bus8.hasActiveListeners("test:event:all")).toBe(false);
   });
 
+  it("should collate all getters for request and map the responses", () => {
+    const bus2 = Bus.getInstance("testBus2");
+    const bus3 = Bus.getInstance("testBus3");
+    const bus4 = Bus.getInstance("testBus4", bus);
+    const bus5 = Bus.getInstance("testBus5", bus);
+    const bus6 = Bus.getInstance("testBus6", bus4);
+    const bus7 = Bus.getInstance("testBus7", bus6);
+    const bus8 = Bus.getInstance("testBus8", bus7);
+
+    const getter2 = vi.fn(() => "response2");
+    const getter3 = vi.fn(() => "response3");
+    const getter4 = vi.fn(() => "response4");
+    const getter5 = vi.fn(() => "response5");
+    const getter6 = vi.fn(() => "response6");
+    const getter7 = vi.fn(() => "response7");
+    const getter8 = vi.fn(() => "response8");
+
+    bus2.registerGetter("get:response", getter2);
+    bus3.registerGetter("get:response", getter3);
+    bus4.registerGetter("get:response", getter4);
+    bus5.registerGetter("get:response", getter5);
+    bus6.registerGetter("get:response", getter6);
+    bus7.registerGetter("get:response", getter7);
+    bus8.registerGetter("get:response:not", getter8);
+
+    const responses = bus.get("get:response");
+    expect(responses.sort()).toEqual([
+      "response2",
+      "response3",
+      "response4",
+      "response5",
+      "response6",
+      "response7",
+    ]);
+  });
+
   // it("should emit global events to the root bus", () => {
   //   const bus2 = Bus.getInstance("testBus2");
   //   const bus3 = Bus.getInstance("testBus3");

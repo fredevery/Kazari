@@ -1,7 +1,7 @@
 import { Phase } from "./Phase.ts";
 import { config } from "@/main/modules/Config.ts";
 import { type PhaseType } from "@/data/models/Phase.ts";
-import { BaseModule } from "./BaseModule.ts";
+import { BaseModule } from "@/main/base/BaseModule.ts";
 import { TimerEvents } from "@/shared/enums.ts";
 
 export class Timer extends BaseModule {

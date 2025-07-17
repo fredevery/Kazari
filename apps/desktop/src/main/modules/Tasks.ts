@@ -1,4 +1,4 @@
-import { BaseModule } from "./BaseModule.ts";
+import { BaseModule } from "@/main/base/BaseModule.ts";
 import { TasksStore } from "@/data/stores/TasksStore.ts";
 import { type Task } from "@/data/models/Task.ts";
 

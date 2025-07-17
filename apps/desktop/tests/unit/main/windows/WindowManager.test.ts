@@ -36,7 +36,6 @@ describe("WindowManager", () => {
     expect(windowManager.getCurrentPhase).toHaveBeenCalledTimes(1);
     expect(windowManager.launchWindowForPhase).toHaveBeenCalled();
     expect(BrowserWindow).toHaveBeenCalled();
-    console.log(">>", windowManager.getCurrentWindow());
     expect(windowManager.getCurrentWindow()!.type).toBe(WindowType.PLANNING);
   });
 });

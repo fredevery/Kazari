@@ -1,32 +1,26 @@
+import { BaseModule } from "@/main/base/BaseModule.ts";
 import { appStore } from "@/data/stores/AppStore.ts";
+import { Bus } from "@/main/core/Bus.ts";
 
-export class Config {
-  private _configs: Record<string, any> = {};
+export class Config extends BaseModule {
+  private configs: Record<string, any> = {};
   constructor() {
+    super();
     this.loadConfigs();
   }
 
   loadConfigs() {
-    this._configs = appStore.get("configs");
+    this.configs = appStore.get("configs");
   }
 
+  @Bus.getter<Config>("config:get")
   get(key: string): any {
-    return this._configs[key];
+    return this.configs[key];
   }
 
   set(key: string, value: any): void {
-    this._configs[key] = value;
-    appStore.set("configs", this._configs);
-  }
-
-  // STATIC PROPERTIES
-  private static instance: Config;
-
-  static getInstance(): Config {
-    if (!Config.instance) {
-      Config.instance = new Config();
-    }
-    return Config.instance;
+    this.configs[key] = value;
+    appStore.set("configs", this.configs);
   }
 }
 

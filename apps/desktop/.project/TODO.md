@@ -33,6 +33,11 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
   - [x] Refactor codebase for modularity and easy feature addition (Factory, Bus, BaseModule implemented)
 - [~] **Secure IPC Communication**
   - [~] contextBridge and preload exist, but not all IPC is validated or fully secured
+- [~] **Bus Architecture**
+  - [x] Basic event system implementation
+  - [x] Event handler decorators (@Bus.eventHandler)
+  - [~] Request-response pattern (handleRequest decorator exists, but full implementation pending)
+  - [ ] Test utilities for decorated methods
 
 ---
 
@@ -64,6 +69,14 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 - [ ] Set up secure storage
 - [ ] Add input sanitization
 - [ ] Implement rate limiting
+
+---
+
+## Improved Code Architecture
+- [x] Implement BaseModule class
+- [x] Implement BaseManager class
+- [x] Create singleton pattern for managers
+- [ ] Complete dependency injection system
 
 ---
 
@@ -111,6 +124,7 @@ Kazari is a desktop productivity app using Electron + Vite + TypeScript + React.
 
 ## Core Pomodoro Logic
 - [x] Timer logic (Timer module and tests implemented)
+- [~] Scheduler implementation with availability and time blocks (basic structure exists)
 - [ ] Break screen with countdown + negative time
 - [ ] Daily session tracking + completion streaks
 - [ ] Button to resume or revisit planning after break

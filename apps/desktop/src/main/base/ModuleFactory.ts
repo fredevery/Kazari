@@ -1,13 +1,8 @@
-import { type BaseModule } from "./BaseModule.ts";
+import type { BaseModule, ModuleConstructor } from "./BaseModule.ts";
 import { Bus } from "@/main/core/Bus.ts";
 
-export interface ModuleConstructor<T extends typeof BaseModule> {
-  new (...args: unknown[]): T;
-  setBus: (bus: Bus) => void;
-}
-
 export class ModuleFactory {
-  static create<T extends typeof BaseModule>(
+  static create<T extends BaseModule>(
     ModuleClass: ModuleConstructor<T>,
     ...args: unknown[]
   ): T {

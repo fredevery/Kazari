@@ -1,13 +1,23 @@
 import { Bus } from "@/main/core/Bus.ts";
-import {
-  ModuleFactory,
-  type ModuleConstructor,
-} from "@/main/base/ModuleFactory.ts";
+import { ModuleFactory } from "@/main/base/ModuleFactory.ts";
+
+export interface ModuleConstructor<T extends BaseModule> {
+  new (...args: unknown[]): T;
+  instance?: T | null;
+  setBus: (bus: Bus) => void;
+}
 
 export class BaseModule {
-  get bus(): Bus {
-    return (this.constructor as typeof BaseModule).getBus();
+  protected bus: Bus;
+
+  constructor() {
+    this.bus = Bus.getInstance(`${this.constructor.name}:Bus`);
   }
+
+  getBus(): Bus {
+    return this.bus;
+  }
+
   emit(event: string, ...args: any[]) {
     this.bus.emit(event, ...args);
   }
@@ -25,17 +35,17 @@ export class BaseModule {
   }
 
   // STATIC PROPERTIES
-  private static instance: typeof BaseModule;
+  private static instance: BaseModule;
   private static bus: Bus | null = null;
-  static getInstance<T extends typeof BaseModule>(
-    this: T,
+  static getInstance<T extends BaseModule>(
+    this: ModuleConstructor<T>,
     ...args: unknown[]
-  ): InstanceType<T> {
-    const ModuleClass = this as unknown as ModuleConstructor<T>;
+  ): T {
+    const ModuleClass = this;
     if (!this.instance) {
       this.instance = ModuleFactory.create<T>(ModuleClass, ...args);
     }
-    return this.instance as InstanceType<T>;
+    return this.instance;
   }
 
   static setBus(bus: Bus) {

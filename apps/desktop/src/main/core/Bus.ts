@@ -9,6 +9,8 @@ type ListenerKey = string | symbol;
 type EventListener = (...args: unknown[]) => void;
 type ListenersMap = Map<ListenerKey, EventListener>;
 type EventListenerMaps = Map<EventKey, ListenersMap>;
+type Getter = (...args: unknown[]) => unknown;
+type GettersMap = Map<string, Getter[]>;
 
 export class Bus extends EventEmitter {
   private parentBus?: Bus;
@@ -17,6 +19,7 @@ export class Bus extends EventEmitter {
   private isRoot: boolean = false;
 
   private eventListenerMaps: EventListenerMaps = new Map();
+  private gettersMap: GettersMap = new Map();
 
   constructor({
     key,
@@ -87,59 +90,74 @@ export class Bus extends EventEmitter {
     return this.childBuses.has(key);
   }
 
-  // canHandle(event: EventKey, fromBus?: Bus): boolean {
-  //   console.log("  >", this.key, "canHandle", event, this.parentBus?.key);
-  //   const canHandle =
-  //     this.eventListenerMaps.has(event) ||
-  //     this.getAllChildBuses()
-  //       .filter((bus) => !fromBus || bus.key !== fromBus.key)
-  //       .some((bus) => {
-  //         return bus.canHandle(event);
-  //       });
+  registerGetter(key: string, getter: Getter): void {
+    throwIfUndefined(key, "Getter key must be defined");
+    throwIfUndefined(getter, "Getter must be defined");
+    warnIfTrue(
+      this.gettersMap.has(key),
+      `Getter with key "${key}" is already registered.`,
+    );
+    const getters = this.gettersMap.get(key) || [];
+    getters.push(getter);
+    this.gettersMap.set(key, getters);
+  }
 
-  //   console.log("  -->", this.key, canHandle);
-  //   return canHandle;
-  // }
+  get(key: string, ...args: unknown[]): unknown[] {
+    throwIfUndefined(key, "Getter key must be defined");
+    return this.getAllGettersForRequest(key, this).map((getter) =>
+      getter(...args),
+    );
+  }
 
-  // parentCanHandle(event: EventKey): boolean {
-  //   console.log("  >", this.key, "parentCanHandle", event, this.parentBus?.key);
-  //   if (!this.parentBus) return false;
-  //   const parentCanHandle =
-  //     this.parentBus.canHandle(event, this) ||
-  //     this.parentBus.parentCanHandle(event);
-
-  //   console.log(
-  //     "  -->",
-  //     this.key,
-  //     this.parentBus?.key,
-  //     parentCanHandle,
-  //     this.parentBus.canHandle(event),
-  //   );
-
-  //   return parentCanHandle;
-  // }
-
-  canHandle(event: EventKey): boolean {
+  canHandleEvent(event: EventKey): boolean {
     return this.eventListenerMaps.has(event);
   }
 
   getAllBusesForEvent(event: EventKey, exclude?: Bus): Bus[] {
     const buses: Bus[] = [];
-    if (this.canHandle(event)) {
+    if (this.canHandleEvent(event)) {
       buses.push(this);
     }
-    const children = this.getChildBusesAsArray()
+    const childBuses = this.getChildBusesAsArray()
       .filter((bus) => !exclude || exclude.key !== bus.key)
       .flatMap((bus) => {
         return bus.getAllBusesForEvent(event, this);
       });
-    buses.push(...children);
+    buses.push(...childBuses);
 
     if (this.parentBus && this.parentBus.key !== exclude?.key) {
       const siblings = this.parentBus.getAllBusesForEvent(event, this);
       buses.push(...siblings);
     }
     return buses;
+  }
+
+  canHandleRequest(requestKey: string): boolean {
+    return this.gettersMap.has(requestKey);
+  }
+
+  getAllGettersForRequest(requestKey: string, exclude?: Bus): Getter[] {
+    const getters: Getter[] = [];
+    if (this.canHandleRequest(requestKey)) {
+      getters.push(...this.gettersMap.get(requestKey)!);
+    }
+
+    const childGetters = this.getChildBusesAsArray()
+      .filter((bus) => !exclude || exclude.key !== bus.key)
+      .flatMap((bus) => {
+        return bus.getAllGettersForRequest(requestKey, this);
+      });
+    getters.push(...childGetters);
+
+    if (this.parentBus && this.parentBus.key !== exclude?.key) {
+      const parentGetters = this.parentBus.getAllGettersForRequest(
+        requestKey,
+        this,
+      );
+      getters.push(...parentGetters);
+    }
+
+    return getters;
   }
 
   emit(event: EventKey, ...args: unknown[]): boolean {
@@ -153,13 +171,6 @@ export class Bus extends EventEmitter {
     super.emit(event, ...args); // Emit the event to the local bus
     return true;
   }
-
-  // handle(event: EventKey, ...args: unknown[]): boolean {
-  //   if (this.canHandle(event)) {
-  //     return super.emit(event, ...args);
-  //   }
-  //   return false;
-  // }
 
   on(event: EventKey, listener: (...args: any[]) => void): this {
     const listenersMap = this.getListenersMapForEvent(event);
@@ -205,6 +216,11 @@ export class Bus extends EventEmitter {
   reset(): this {
     this.removeAllListeners();
     this.eventListenerMaps.clear();
+    this.gettersMap.clear();
+    this.childBuses.forEach((bus) => {
+      bus.reset();
+      bus.destroy();
+    });
     return this;
   }
 
@@ -281,27 +297,41 @@ export class Bus extends EventEmitter {
       });
 
       return methodWrapper;
-      // originalMethod.__wrapped = true;
-      // console.log(context, Object.keys(originalMethod));
-      // context.addInitializer(function (this: This) {
-      //   this.getBus().on(eventKey, (...args: Args) => {
-      //     console.log(">>>", originalMethod.__wrapped);
-      //     originalMethod.apply(this, args);
-      //   });
-      // });
-
-      // return originalMethod;
     };
   }
 
-  static handleRequest(requestKey: string) {
-    return function requestHandlerDecorator(
-      originalMethod: Function,
-      context: ClassMethodDecoratorContext,
+  static getter<Parent>(requestKey: string) {
+    return function getterDecorator<
+      This extends Parent & ClassWithBus,
+      Args extends unknown[],
+      Return,
+    >(
+      originalMethod: (this: This, ...args: Args) => Return,
+      context: ClassMethodDecoratorContext<
+        This,
+        (this: This, ...args: Args) => Return
+      >,
     ) {
-      return function methodWrapper(this: any, ...args: any[]) {
-        return originalMethod.call(this, ...args);
-      };
+      const methodName = context.name;
+      function methodWrapper(this: This, ...args: Args): Return {
+        const results = originalMethod.apply(this, args);
+        return results;
+      }
+      methodWrapper.prototype.name = methodName;
+
+      context.addInitializer(function (this: This) {
+        Object.defineProperties(methodWrapper, {
+          name: {
+            value: `${this.constructor.name}.${String(methodName)}`,
+          },
+        });
+        this.getBus().registerGetter(
+          requestKey,
+          methodWrapper.bind(this) as Getter,
+        );
+      });
+
+      return methodWrapper;
     };
   }
 }
