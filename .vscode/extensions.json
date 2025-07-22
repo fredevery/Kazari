@@ -1,0 +1,34 @@
+{
+  "recommendations": [
+    // GitHub Copilot
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
+    // TypeScript and JavaScript
+    "ms-vscode.vscode-typescript-next",
+    // React Development
+    "bradlc.vscode-tailwindcss",
+    "formulahendry.auto-rename-tag",
+    "formulahendry.auto-close-tag",
+    // Code Quality and Formatting
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "EditorConfig.EditorConfig",
+    // Electron Development
+    "ms-vscode.vscode-json",
+    // Testing
+    "ms-vscode.test-adapter-converter",
+    // Git and Version Control
+    "eamodio.gitlens",
+    "GitHub.vscode-pull-request-github",
+    // Markdown and Documentation
+    "yzhang.markdown-all-in-one",
+    "DavidAnson.vscode-markdownlint",
+    // Utilities
+    "christian-kohler.path-intellisense",
+    "bradlc.vscode-tailwindcss",
+    "ms-vscode.vscode-json"
+  ],
+  "unwantedRecommendations": [
+    "ms-vscode.vscode-typescript-tslint-plugin"
+  ]
+}

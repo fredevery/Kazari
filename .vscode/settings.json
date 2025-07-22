@@ -1,7 +1,148 @@
 {
-  "eslint.workingDirectories": [
-    {
-      "mode": "auto"
+  // GitHub Copilot Configuration
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": true,
+    "scminput": false
+  },
+  "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+  "github.copilot.chat.welcomeMessage": "never",
+  // Chat and Instructions Configuration
+  "chat.promptFiles": true,
+  // TypeScript Configuration
+  "typescript.preferences.includePackageJsonAutoImports": "on",
+  "typescript.suggest.autoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.inlayHints.parameterNames.enabled": "all",
+  "typescript.inlayHints.variableTypes.enabled": true,
+  "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+  "typescript.preferences.importModuleSpecifier": "relative",
+  // ESLint Configuration
+  "eslint.enable": true,
+  "eslint.format.enable": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  // Prettier Configuration
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  // File Associations
+  "files.associations": {
+    "*.md": "markdown",
+    "*.instructions.md": "markdown",
+    "*.prompt.md": "markdown"
+  },
+  // Editor Configuration
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "editor.rulers": [
+    80,
+    120
+  ],
+  "editor.wordWrap": "bounded",
+  "editor.wordWrapColumn": 120,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active",
+  "editor.inlineSuggest.enabled": true,
+  "editor.suggestSelection": "first",
+  // Search Configuration
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/coverage": true,
+    "**/.nyc_output": true
+  },
+  // File Explorer Configuration
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "*.ts": "${capture}.js",
+    "*.tsx": "${capture}.js",
+    "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml",
+    "tsconfig.json": "tsconfig.*.json",
+    "vite.config.ts": "vite.config.*.ts",
+    ".eslintrc.js": ".eslintrc.*.js, .eslintignore",
+    ".prettierrc": ".prettierignore"
+  },
+  // Terminal Configuration
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.env.osx": {
+    "NODE_ENV": "development"
+  },
+  "terminal.integrated.cwd": "${workspaceFolder}",
+  // Git Configuration
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "git.autofetch": true,
+  "git.defaultCloneDirectory": "${workspaceFolder}",
+  // Electron Development
+  "debug.node.autoAttach": "disabled",
+  "extensions.ignoreRecommendations": false,
+  // React/JSX Configuration
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact",
+    "typescript": "typescriptreact"
+  },
+  "emmet.triggerExpansionOnTab": true,
+  // Testing Configuration
+  "testing.automaticallyOpenPeekView": "failureInVisibleDocument",
+  "testing.defaultGutterClickAction": "run",
+  // Markdown Configuration
+  "markdown.preview.fontSize": 14,
+  "markdown.preview.lineHeight": 1.6,
+  "markdown.extension.toc.levels": "2..6",
+  // Security and Privacy
+  "telemetry.telemetryLevel": "error",
+  "update.showReleaseNotes": false,
+  // Workspace Specific Settings
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.nyc_output": true,
+    "**/coverage": true
+  },
+  // Language Specific Settings
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.suggest.insertMode": "replace"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.suggest.insertMode": "replace"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "vscode.markdown-language-features",
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
     }
-  ]
+  }
 }
