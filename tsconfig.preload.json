@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "target": "ES2022",
+    "module": "ESNext",
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "outDir": "dist/preload",
+    "noEmit": false,
+    "emitDeclarationOnly": false
+  },
+  "include": [
+    "src/preload/**/*",
+    "src/shared/**/*"
+  ],
+  "exclude": [
+    "src/main",
+    "src/renderer",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
+}
