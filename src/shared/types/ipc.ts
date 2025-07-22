@@ -8,6 +8,7 @@ export type IPCChannel = string & { readonly __brand: 'IPCChannel' };
 
 // Timer channels
 export const TIMER_CHANNELS = {
+  // Legacy channels for backwards compatibility
   CREATE_SESSION: 'timer:create-session' as IPCChannel,
   START_SESSION: 'timer:start-session' as IPCChannel,
   PAUSE_SESSION: 'timer:pause-session' as IPCChannel,
@@ -16,6 +17,20 @@ export const TIMER_CHANNELS = {
   GET_SESSION_HISTORY: 'timer:get-session-history' as IPCChannel,
   SESSION_UPDATED: 'timer:session-updated' as IPCChannel,
   SESSION_COMPLETED: 'timer:session-completed' as IPCChannel,
+
+  // New Pomodoro timer channels
+  START_TIMER: 'pomodoro:start' as IPCChannel,
+  PAUSE_TIMER: 'pomodoro:pause' as IPCChannel,
+  RESET_TIMER: 'pomodoro:reset' as IPCChannel,
+  SKIP_PHASE: 'pomodoro:skip' as IPCChannel,
+  CONFIGURE_TIMER: 'pomodoro:configure' as IPCChannel,
+  GET_TIMER_STATE: 'pomodoro:get-state' as IPCChannel,
+  GET_STATISTICS: 'pomodoro:get-statistics' as IPCChannel,
+
+  // Event channels for real-time updates
+  TIMER_TICK: 'pomodoro:tick' as IPCChannel,
+  PHASE_CHANGED: 'pomodoro:phase-changed' as IPCChannel,
+  STATE_CHANGED: 'pomodoro:state-changed' as IPCChannel,
 } as const;
 
 // Settings channels
@@ -56,6 +71,16 @@ export interface SessionActionIPCRequest {
   readonly sessionId: string;
 }
 
+export interface ConfigureTimerIPCRequest {
+  readonly config: Partial<import('./timer').TimerConfig>;
+}
+
+export interface PhaseChangedIPCData {
+  readonly fromPhase: import('./timer').TimerPhase;
+  readonly toPhase: import('./timer').TimerPhase;
+  readonly state: import('./timer').TimerState;
+}
+
 export interface UpdateSettingsIPCRequest {
   readonly settings: Partial<import('./timer').TimerSettings>;
 }
@@ -88,7 +113,7 @@ export interface ShowNotificationIPCRequest {
 export interface IPCError {
   readonly code: string;
   readonly message: string;
-  readonly details?: Record<string, unknown>;
+  details?: Record<string, unknown>;
 }
 
 export type IPCResult<T> = {
@@ -103,13 +128,25 @@ export type IPCResult<T> = {
  * Electron API exposed through contextBridge
  */
 export interface ElectronAPI {
-  // Timer operations
-  createSession: (request: CreateSessionIPCRequest) => Promise<IPCResult<import('./timer').TimerSession>>;
-  startSession: (sessionId: string) => Promise<IPCResult<import('./timer').TimerSession>>;
-  pauseSession: (sessionId: string) => Promise<IPCResult<import('./timer').TimerSession>>;
-  stopSession: (sessionId: string) => Promise<IPCResult<import('./timer').TimerSession>>;
-  getCurrentSession: () => Promise<IPCResult<import('./timer').TimerSession | null>>;
-  getSessionHistory: () => Promise<IPCResult<readonly import('./timer').TimerSession[]>>;
+  // Legacy timer operations (for backwards compatibility)
+  createSession: (request: CreateSessionIPCRequest) => Promise<IPCResult<import('./timer').LegacyTimerSession>>;
+  startSession: (sessionId: string) => Promise<IPCResult<import('./timer').LegacyTimerSession>>;
+  pauseSession: (sessionId: string) => Promise<IPCResult<import('./timer').LegacyTimerSession>>;
+  stopSession: (sessionId: string) => Promise<IPCResult<import('./timer').LegacyTimerSession>>;
+  getCurrentSession: () => Promise<IPCResult<import('./timer').LegacyTimerSession | null>>;
+  getSessionHistory: () => Promise<IPCResult<readonly import('./timer').LegacyTimerSession[]>>;
+
+  // New Pomodoro timer operations
+  pomodoro: {
+    start: () => Promise<IPCResult<import('./timer').TimerState>>;
+    pause: () => Promise<IPCResult<import('./timer').TimerState>>;
+    reset: () => Promise<IPCResult<import('./timer').TimerState>>;
+    skip: () => Promise<IPCResult<import('./timer').TimerState>>;
+    configure: (config: Partial<import('./timer').TimerConfig>) => Promise<IPCResult<import('./timer').TimerConfig>>;
+    getState: () => Promise<IPCResult<import('./timer').TimerState>>;
+    getStatistics: () => Promise<IPCResult<import('./timer').TimerStatistics>>;
+    getHistory: () => Promise<IPCResult<readonly import('./timer').TimerSession[]>>;
+  };
 
   // Settings operations
   getSettings: () => Promise<IPCResult<import('./timer').TimerSettings>>;
@@ -129,9 +166,14 @@ export interface ElectronAPI {
   showNotification: (request: ShowNotificationIPCRequest) => Promise<IPCResult<void>>;
 
   // Event subscriptions
-  onSessionUpdated: (callback: (session: import('./timer').TimerSession) => void) => () => void;
-  onSessionCompleted: (callback: (session: import('./timer').TimerSession) => void) => () => void;
+  onSessionUpdated: (callback: (session: import('./timer').LegacyTimerSession) => void) => () => void;
+  onSessionCompleted: (callback: (session: import('./timer').LegacyTimerSession) => void) => () => void;
   onSettingsUpdated: (callback: (settings: import('./timer').TimerSettings) => void) => () => void;
+
+  // New Pomodoro timer events
+  onTimerTick: (callback: (state: import('./timer').TimerState) => void) => () => void;
+  onPhaseChanged: (callback: (data: PhaseChangedIPCData) => void) => () => void;
+  onStateChanged: (callback: (state: import('./timer').TimerState) => void) => () => void;
 }
 
 declare global {

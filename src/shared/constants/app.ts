@@ -15,6 +15,17 @@ export const TIMER_CONFIG = {
   MAX_DURATION: 120 * 60 * 1000, // 2 hours
   TICK_INTERVAL: 1000, // 1 second
   WARNING_TIME: 60 * 1000, // 1 minute warning
+
+  // Pomodoro timer specific configuration
+  DEFAULT_POMODORO_CONFIG: {
+    planningDuration: 5, // minutes
+    focusDuration: 25, // minutes
+    breakDuration: 5, // minutes
+    longBreakDuration: 15, // minutes
+    longBreakInterval: 4, // every N sessions
+    autoStartBreaks: true,
+    autoStartFocus: false,
+  },
 } as const;
 
 export const WINDOW_CONFIG = {

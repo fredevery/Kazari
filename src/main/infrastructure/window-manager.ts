@@ -1,6 +1,6 @@
 import { WINDOW_CONFIG } from '@shared/constants/app';
 import { WindowState, WindowType } from '@shared/types/timer';
-import { BrowserWindow, screen, app } from 'electron';
+import { app, BrowserWindow, screen } from 'electron';
 import * as path from 'path';
 
 /**
@@ -25,10 +25,10 @@ export class WindowManager {
     }
 
     const windowConfig = this.getWindowConfig(type);
-    const preloadPath = this.isDevelopment 
+    const preloadPath = this.isDevelopment
       ? path.join(app.getAppPath(), 'dist/preload/index.js')
       : path.join(__dirname, '../preload/index.js');
-    
+
     const browserWindowOptions: Electron.BrowserWindowConstructorOptions = {
       ...windowConfig,
       ...options?.bounds,

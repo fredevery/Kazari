@@ -1,112 +1,47 @@
-import { NotificationService, TimerSession } from '@shared/types/timer';
-import { Notification, app } from 'electron';
-import { formatDuration } from '../../shared/utils';
+import { NotificationService, TimerError, TimerPhase } from '@shared/types/timer';
+import { nativeImage, NativeImage, Notification } from 'electron';
 
 /**
- * Notification Service Implementation using Electron notifications
- * Handles system notifications for timer events
+ * Notification Service Implementation
+ * Handles system notifications for timer events with proper platform integration
  */
 export class NotificationServiceImpl implements NotificationService {
-  private hasPermission = false;
+  private hasPermission: boolean = false;
 
   constructor() {
+    // Request notification permission on initialization
     this.requestPermission().catch(console.error);
   }
 
   /**
-   * Show timer completion notification
+   * Show phase transition notification
    */
-  public async showTimerComplete(session: TimerSession): Promise<void> {
-    if (!this.hasPermission) {
-      await this.requestPermission();
-    }
+  public async showPhaseTransition(fromPhase: TimerPhase, toPhase: TimerPhase): Promise<void> {
+    const { title, body } = this.getPhaseTransitionMessage(fromPhase, toPhase);
 
-    if (!this.hasPermission) {
-      console.warn('Notification permission not granted');
-      return;
-    }
-
-    try {
-      const options: Electron.NotificationConstructorOptions = {
-        title: 'Timer Complete! 🎉',
-        body: `"${session.name}" finished after ${formatDuration(session.duration)}`,
-        silent: false,
-        urgency: 'critical',
-      };
-
-      const icon = this.getAppIcon();
-      if (icon) {
-        options.icon = icon;
-      }
-
-      const notification = new Notification(options);
-
-      notification.show();
-
-      notification.on('click', () => {
-        // Bring app to front when notification is clicked
-        app.focus();
-      });
-    } catch (error) {
-      console.error('Failed to show completion notification:', error);
-    }
+    await this.showCustomNotification(title, body, false);
   }
 
   /**
-   * Show timer warning notification
+   * Show timer warning notification (last minute)
    */
-  public async showTimerWarning(session: TimerSession, remainingTime: number): Promise<void> {
-    if (!this.hasPermission) {
-      await this.requestPermission();
-    }
+  public async showTimerWarning(phase: TimerPhase, remainingTime: number): Promise<void> {
+    const title = this.getPhaseDisplayName(phase);
+    const minutes = Math.ceil(remainingTime / (60 * 1000));
+    const body = `${minutes} minute${minutes !== 1 ? 's' : ''} remaining`;
 
-    if (!this.hasPermission) {
-      console.warn('Notification permission not granted');
-      return;
-    }
-
-    try {
-      const options: Electron.NotificationConstructorOptions = {
-        title: 'Timer Warning ⏰',
-        body: `"${session.name}" has ${formatDuration(remainingTime)} remaining`,
-        silent: true,
-        urgency: 'normal',
-      };
-
-      const icon = this.getAppIcon();
-      if (icon) {
-        options.icon = icon;
-      }
-
-      const notification = new Notification(options);
-
-      notification.show();
-
-      notification.on('click', () => {
-        // Bring app to front when notification is clicked
-        app.focus();
-      });
-    } catch (error) {
-      console.error('Failed to show warning notification:', error);
-    }
+    await this.showCustomNotification(title, body, true);
   }
 
   /**
-   * Request notification permission
+   * Request notification permission from the system
    */
   public async requestPermission(): Promise<boolean> {
     try {
-      // On Electron, notifications are usually available by default
-      // but we should still check if the system supports them
-      if ('Notification' in globalThis) {
-        this.hasPermission = true;
-        return true;
-      }
-
-      // For older Electron versions or systems without notification support
-      this.hasPermission = false;
-      console.warn('System notifications not supported');
-      return false;
+      // Electron notifications don't require explicit permission on most platforms
+      // but we simulate the check for consistency
+      this.hasPermission = true;
+      return true;
     } catch (error) {
       console.error('Failed to request notification permission:', error);
       this.hasPermission = false;
@@ -117,54 +52,93 @@ export class NotificationServiceImpl implements NotificationService {
   /**
    * Show a custom notification
    */
-  public async showCustomNotification(title: string, body: string, silent = false): Promise<void> {
-    if (!this.hasPermission) {
-      await this.requestPermission();
-    }
-
-    if (!this.hasPermission) {
-      console.warn('Notification permission not granted');
-      return;
-    }
-
+  public async showCustomNotification(
+    title: string,
+    body: string,
+    silent: boolean = false
+  ): Promise<void> {
     try {
-      const options: Electron.NotificationConstructorOptions = {
+      if (!this.hasPermission) {
+        console.warn('No notification permission, skipping notification');
+        return;
+      }
+
+      const icon = this.getNotificationIcon();
+      const notificationOptions: Electron.NotificationConstructorOptions = {
         title,
         body,
         silent,
-        urgency: silent ? 'normal' : 'low',
+        urgency: silent ? 'low' : 'normal',
       };
 
-      const icon = this.getAppIcon();
       if (icon) {
-        options.icon = icon;
+        notificationOptions.icon = icon;
       }
 
-      const notification = new Notification(options);
-
+      const notification = new Notification(notificationOptions);
       notification.show();
-
-      notification.on('click', () => {
-        app.focus();
-      });
     } catch (error) {
-      console.error('Failed to show custom notification:', error);
+      throw new TimerError('Failed to show notification', 'NOTIFICATION_FAILED', { error });
     }
   }
 
   /**
-   * Get the application icon path for notifications
+   * Get phase transition message
    */
-  private getAppIcon(): string | undefined {
-    // In a real app, you would return the path to your app icon
-    // For now, we'll return undefined to use the system default
-    return undefined;
+  private getPhaseTransitionMessage(fromPhase: TimerPhase, toPhase: TimerPhase): { title: string; body: string } {
+    const fromName = this.getPhaseDisplayName(fromPhase);
+    const toName = this.getPhaseDisplayName(toPhase);
+
+    switch (toPhase) {
+      case 'planning':
+        return {
+          title: '🎯 Planning Time',
+          body: `${fromName} complete! Time to plan your next session.`
+        };
+      case 'focus':
+        return {
+          title: '🔥 Focus Time',
+          body: `${fromName} complete! Time to focus and get things done.`
+        };
+      case 'break':
+        return {
+          title: '☕ Break Time',
+          body: `${fromName} complete! Take a well-deserved break.`
+        };
+      default:
+        return {
+          title: 'Phase Complete',
+          body: `${fromName} finished. Starting ${toName}.`
+        };
+    }
   }
 
   /**
-   * Check if notifications are supported and enabled
+   * Get display name for a timer phase
    */
-  public isSupported(): boolean {
-    return this.hasPermission;
+  private getPhaseDisplayName(phase: TimerPhase): string {
+    switch (phase) {
+      case 'planning':
+        return 'Planning';
+      case 'focus':
+        return 'Focus';
+      case 'break':
+        return 'Break';
+      default:
+        return phase;
+    }
+  }
+
+  /**
+   * Get notification icon
+   */
+  private getNotificationIcon(): NativeImage | undefined {
+    try {
+      // Use app icon if available
+      return nativeImage.createFromPath('./assets/icon.png');
+    } catch {
+      // Return undefined to use default system icon
+      return undefined;
+    }
   }
 }

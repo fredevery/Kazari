@@ -1,8 +1,10 @@
 import { APP_CONFIG } from '@shared/constants/app';
 import { app, BrowserWindow } from 'electron';
 import { NotificationServiceImpl } from './application/services/notification-service';
+import { PomodoroTimerServiceImpl } from './application/services/pomodoro-timer-service';
 import { TimerServiceImpl } from './application/services/timer-service';
 import { IPCHandler } from './infrastructure/ipc-handler';
+import { PomodoroTimerRepositoryImpl } from './infrastructure/repositories/pomodoro-timer-repository-impl';
 import { SettingsRepositoryImpl } from './infrastructure/repositories/settings-repository';
 import { TimerRepositoryImpl } from './infrastructure/repositories/timer-repository';
 import { WindowManager } from './infrastructure/window-manager';
@@ -15,16 +17,22 @@ class KazariApp {
   private windowManager: WindowManager;
   private ipcHandler: IPCHandler;
   private timerService: TimerServiceImpl;
+  private pomodoroTimerService: PomodoroTimerServiceImpl;
   private notificationService: NotificationServiceImpl;
 
   constructor() {
     // Initialize repositories
     const timerRepository = new TimerRepositoryImpl();
     const settingsRepository = new SettingsRepositoryImpl();
+    const pomodoroTimerRepository = new PomodoroTimerRepositoryImpl();
 
     // Initialize services
     this.notificationService = new NotificationServiceImpl();
     this.timerService = new TimerServiceImpl(timerRepository, this.notificationService);
+    this.pomodoroTimerService = new PomodoroTimerServiceImpl(
+      pomodoroTimerRepository,
+      this.notificationService
+    );
 
     // Initialize window manager
     this.windowManager = new WindowManager();
@@ -34,7 +42,8 @@ class KazariApp {
       this.timerService,
       settingsRepository,
       this.windowManager,
-      this.notificationService
+      this.notificationService,
+      this.pomodoroTimerService
     );
   }
 
