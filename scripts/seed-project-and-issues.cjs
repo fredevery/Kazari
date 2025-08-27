@@ -5,6 +5,8 @@
  * - A Projects v2 board named "Kazari Roadmap" is ensured via GraphQL
  * - Each issue is added to the project and its Status field set based on frontmatter
  */
+
+// 1
 const fs = require('fs');
 const path = require('path');
 
