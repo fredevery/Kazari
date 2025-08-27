@@ -4,7 +4,7 @@ import { WindowType } from '@shared/types/timer';
 /**
  * UI state interface
  */
-interface UIState {
+export interface UIState {
   currentWindow: WindowType;
   isSettingsOpen: boolean;
   isHistoryOpen: boolean;

@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CreateTimerSessionRequest, TimerSession } from '@shared/types/timer';
+import { CreateSessionIPCRequest } from '@shared/types/ipc';
+import { CreateTimerSessionRequest, LegacyTimerSession } from '@shared/types/timer';
 
 /**
  * Timer state interface
  */
-interface TimerState {
-  currentSession: TimerSession | null;
-  sessionHistory: TimerSession[];
+export interface TimerState {
+  currentSession: LegacyTimerSession | null;
+  sessionHistory: LegacyTimerSession[];
   isLoading: boolean;
   error: string | null;
 }
@@ -29,7 +30,12 @@ export const createTimerSession = createAsyncThunk(
   'timer/createSession',
   async (request: CreateTimerSessionRequest, { rejectWithValue }) => {
     try {
-      const result = await window.electronAPI.createSession(request);
+      // Map to legacy IPC request shape
+      const ipcReq: CreateSessionIPCRequest = {
+        name: request.name ?? 'Session',
+        duration: request.duration ?? 25,
+      };
+      const result = await window.electronAPI.createSession(ipcReq);
       if (result.success) {
         return result.data;
       } else {
@@ -128,15 +134,15 @@ export const timerSlice = createSlice({
   name: 'timer',
   initialState,
   reducers: {
-    setCurrentSession: (state, action: PayloadAction<TimerSession | null>) => {
+    setCurrentSession: (state, action: PayloadAction<LegacyTimerSession | null>) => {
       state.currentSession = action.payload;
     },
-    updateCurrentSession: (state, action: PayloadAction<Partial<TimerSession>>) => {
+    updateCurrentSession: (state, action: PayloadAction<Partial<LegacyTimerSession>>) => {
       if (state.currentSession && action.payload.id === state.currentSession.id) {
         state.currentSession = { ...state.currentSession, ...action.payload };
       }
     },
-    addToHistory: (state, action: PayloadAction<TimerSession>) => {
+    addToHistory: (state, action: PayloadAction<LegacyTimerSession>) => {
       const existingIndex = state.sessionHistory.findIndex(s => s.id === action.payload.id);
       if (existingIndex >= 0) {
         state.sessionHistory[existingIndex] = action.payload;
@@ -157,7 +163,7 @@ export const timerSlice = createSlice({
       })
       .addCase(createTimerSession.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.currentSession = action.payload;
+        state.currentSession = action.payload as LegacyTimerSession;
       })
       .addCase(createTimerSession.rejected, (state, action) => {
         state.isLoading = false;
@@ -172,7 +178,7 @@ export const timerSlice = createSlice({
       })
       .addCase(startTimerSession.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.currentSession = action.payload;
+        state.currentSession = action.payload as LegacyTimerSession;
       })
       .addCase(startTimerSession.rejected, (state, action) => {
         state.isLoading = false;
@@ -187,7 +193,7 @@ export const timerSlice = createSlice({
       })
       .addCase(pauseTimerSession.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.currentSession = action.payload;
+        state.currentSession = action.payload as LegacyTimerSession;
       })
       .addCase(pauseTimerSession.rejected, (state, action) => {
         state.isLoading = false;
@@ -202,7 +208,7 @@ export const timerSlice = createSlice({
       })
       .addCase(stopTimerSession.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.currentSession = action.payload;
+        state.currentSession = action.payload as LegacyTimerSession;
       })
       .addCase(stopTimerSession.rejected, (state, action) => {
         state.isLoading = false;
@@ -217,7 +223,7 @@ export const timerSlice = createSlice({
       })
       .addCase(getCurrentSession.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.currentSession = action.payload;
+        state.currentSession = action.payload as LegacyTimerSession | null;
       })
       .addCase(getCurrentSession.rejected, (state, action) => {
         state.isLoading = false;
@@ -232,7 +238,8 @@ export const timerSlice = createSlice({
       })
       .addCase(getSessionHistory.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.sessionHistory = action.payload as TimerSession[];
+        // Make a mutable copy of readonly array
+        state.sessionHistory = (action.payload as readonly LegacyTimerSession[]).slice() as LegacyTimerSession[];
       })
       .addCase(getSessionHistory.rejected, (state, action) => {
         state.isLoading = false;

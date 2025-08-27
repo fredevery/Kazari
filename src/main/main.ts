@@ -4,6 +4,7 @@ import { NotificationServiceImpl } from './application/services/notification-ser
 import { PomodoroTimerServiceImpl } from './application/services/pomodoro-timer-service';
 import { TimerServiceImpl } from './application/services/timer-service';
 import { IPCHandler } from './infrastructure/ipc-handler';
+import { PomodoroIPCHandler } from './infrastructure/pomodoro-ipc-handler';
 import { PomodoroTimerRepositoryImpl } from './infrastructure/repositories/pomodoro-timer-repository-impl';
 import { SettingsRepositoryImpl } from './infrastructure/repositories/settings-repository';
 import { TimerRepositoryImpl } from './infrastructure/repositories/timer-repository';
@@ -15,7 +16,7 @@ import { WindowManager } from './infrastructure/window-manager';
  */
 class KazariApp {
   private windowManager: WindowManager;
-  private ipcHandler: IPCHandler;
+  private ipcHandler: IPCHandler | PomodoroIPCHandler;
   private timerService: TimerServiceImpl;
   private pomodoroTimerService: PomodoroTimerServiceImpl;
   private notificationService: NotificationServiceImpl;
@@ -37,13 +38,13 @@ class KazariApp {
     // Initialize window manager
     this.windowManager = new WindowManager();
 
-    // Initialize IPC handler
-    this.ipcHandler = new IPCHandler(
+    // Initialize IPC handler (Pomodoro-aware, with legacy compatibility)
+    this.ipcHandler = new PomodoroIPCHandler(
+      this.pomodoroTimerService,
       this.timerService,
       settingsRepository,
       this.windowManager,
-      this.notificationService,
-      this.pomodoroTimerService
+      this.notificationService
     );
   }
 
@@ -62,6 +63,8 @@ class KazariApp {
   private async setupElectronEvents(): Promise<void> {
     // Handle app ready event
     app.whenReady().then(async () => {
+      // Initialize Pomodoro timer service (load persisted state etc.)
+      await this.pomodoroTimerService.initialize();
       await this.createMainWindow();
       await this.setupSecurityPolicies();
     });

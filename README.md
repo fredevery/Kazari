@@ -78,6 +78,11 @@ The application follows clean architecture principles:
 - **Vite 5.1.5**: Build tooling
 - **electron-store**: Persistent storage
 
+## IPC Documentation
+
+- Channel reference: docs/ipc/channels.md
+- Usage guide: docs/ipc/usage.md
+
 ## License
 
 MIT License

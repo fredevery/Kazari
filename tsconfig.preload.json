@@ -8,6 +8,7 @@
       "ES2022",
       "DOM"
     ],
+    "allowImportingTsExtensions": false,
     "outDir": "dist/preload",
     "noEmit": false,
     "emitDeclarationOnly": false

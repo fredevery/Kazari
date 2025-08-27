@@ -6,7 +6,7 @@ export default defineConfig({
     target: 'node18',
     outDir: 'dist/preload',
     lib: {
-      entry: resolve(__dirname, 'src/preload/index.ts'),
+      entry: resolve(__dirname, 'src/preload/pomodoro-preload.ts'),
       formats: ['cjs'],
       fileName: () => 'index.js'
     },

@@ -10,6 +10,7 @@
       "DOM.Iterable"
     ],
     "jsx": "react-jsx",
+    "allowImportingTsExtensions": false,
     "outDir": "dist/renderer",
     "noEmit": false,
     "emitDeclarationOnly": false

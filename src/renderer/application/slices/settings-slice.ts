@@ -4,7 +4,7 @@ import { TimerSettings } from '@shared/types/timer';
 /**
  * Settings state interface
  */
-interface SettingsState {
+export interface SettingsState {
   settings: TimerSettings | null;
   isLoading: boolean;
   error: string | null;

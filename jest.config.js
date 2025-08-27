@@ -21,10 +21,11 @@ module.exports = {
     'lcov',
     'html'
   ],
-  moduleNameMapping: {
+  moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@shared/(.*)$': '<rootDir>/src/shared/$1',
     '^@main/(.*)$': '<rootDir>/src/main/$1',
-    '^@renderer/(.*)$': '<rootDir>/src/renderer/$1'
+    '^@renderer/(.*)$': '<rootDir>/src/renderer/$1',
+    '^electron$': '<rootDir>/__mocks__/electron.ts'
   }
 };

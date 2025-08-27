@@ -17,15 +17,24 @@ import {
   TimerConfig,
   TimerService // Legacy service
   ,
+
   TimerSettings
 } from '@shared/types/timer';
+import {
+  CreateWindowRequestSchema,
+  ShowNotificationRequestSchema,
+  TimerConfigUpdateSchema,
+  TimerSettingsUpdateSchema
+} from '@shared/types/validation';
 import { BrowserWindow, ipcMain } from 'electron';
 import { WindowManager } from './window-manager';
 
 /**
  * Enhanced IPC Handler
- * Manages all Inter-Process Communication with support for both legacy and Pomodoro APIs
- * Implements type-safe IPC with proper error handling and validation
+ *
+ * Manages all Inter-Process Communication for both legacy timer APIs and the
+ * new Pomodoro timer APIs. Provides consistent IPCResult<T> responses, input
+ * validation, and event broadcasting to all renderer windows.
  */
 export class PomodoroIPCHandler {
   constructor(
@@ -44,7 +53,7 @@ export class PomodoroIPCHandler {
   }
 
   /**
-   * Setup new Pomodoro timer IPC channels
+   * Setup new Pomodoro timer IPC channels.
    */
   private setupPomodoroTimerChannels(): void {
     // Start timer
@@ -73,11 +82,22 @@ export class PomodoroIPCHandler {
 
     // Configure timer
     ipcMain.handle(TIMER_CHANNELS.CONFIGURE_TIMER, async (_, config: Partial<TimerConfig>) => {
-      if (!this.isValidTimerConfig(config)) {
+      const parsed = TimerConfigUpdateSchema.safeParse(config);
+      if (!parsed.success) {
         return this.createErrorResult('INVALID_CONFIG', 'Invalid timer configuration');
       }
 
-      const result = await this.pomodoroTimerService.configure(config);
+      // Build Partial<TimerConfig> without undefineds to satisfy exactOptionalPropertyTypes
+      const cfg: Partial<TimerConfig> = {
+        ...(parsed.data.planningDuration !== undefined ? { planningDuration: parsed.data.planningDuration } : {}),
+        ...(parsed.data.focusDuration !== undefined ? { focusDuration: parsed.data.focusDuration } : {}),
+        ...(parsed.data.breakDuration !== undefined ? { breakDuration: parsed.data.breakDuration } : {}),
+        ...(parsed.data.longBreakDuration !== undefined ? { longBreakDuration: parsed.data.longBreakDuration } : {}),
+        ...(parsed.data.longBreakInterval !== undefined ? { longBreakInterval: parsed.data.longBreakInterval } : {}),
+        ...(parsed.data.autoStartBreaks !== undefined ? { autoStartBreaks: parsed.data.autoStartBreaks } : {}),
+        ...(parsed.data.autoStartFocus !== undefined ? { autoStartFocus: parsed.data.autoStartFocus } : {}),
+      };
+      const result = await this.pomodoroTimerService.configure(cfg);
       return this.convertToIPCResult(result);
     });
 
@@ -95,7 +115,7 @@ export class PomodoroIPCHandler {
   }
 
   /**
-   * Setup legacy timer IPC channels for backwards compatibility
+   * Setup legacy timer IPC channels for backwards compatibility.
    */
   private setupLegacyTimerChannels(): void {
     // Create session (legacy)
@@ -173,7 +193,7 @@ export class PomodoroIPCHandler {
   }
 
   /**
-   * Setup settings-related IPC channels
+   * Setup settings-related IPC channels.
    */
   private setupSettingsChannels(): void {
     // Get settings
@@ -188,12 +208,20 @@ export class PomodoroIPCHandler {
 
     // Update settings
     ipcMain.handle(SETTINGS_CHANNELS.UPDATE_SETTINGS, async (_, request: UpdateSettingsIPCRequest) => {
-      if (!this.isValidSettingsUpdate(request.settings)) {
+      const parsed = TimerSettingsUpdateSchema.safeParse({ settings: request.settings });
+      if (!parsed.success) {
         return this.createErrorResult('INVALID_SETTINGS', 'Invalid settings update');
       }
 
       try {
-        const updatedSettings = await this.settingsRepository.updateSettings(request.settings);
+        // Build Partial<TimerSettings> without undefineds
+        const settingsUpdate: Partial<TimerSettings> = {
+          ...(parsed.data.settings.config !== undefined ? { config: parsed.data.settings.config } : {}),
+          ...(parsed.data.settings.notifications !== undefined ? { notifications: parsed.data.settings.notifications } : {}),
+          ...(parsed.data.settings.soundEnabled !== undefined ? { soundEnabled: parsed.data.settings.soundEnabled } : {}),
+          ...(parsed.data.settings.alwaysOnTop !== undefined ? { alwaysOnTop: parsed.data.settings.alwaysOnTop } : {}),
+        };
+        const updatedSettings = await this.settingsRepository.updateSettings(settingsUpdate);
 
         // Broadcast settings change to all windows
         this.broadcastToAllWindows(SETTINGS_CHANNELS.SETTINGS_UPDATED, updatedSettings);
@@ -206,30 +234,31 @@ export class PomodoroIPCHandler {
   }
 
   /**
-   * Setup window management IPC channels
+   * Setup window management IPC channels.
    */
   private setupWindowChannels(): void {
     // Create window
     ipcMain.handle(WINDOW_CHANNELS.CREATE_WINDOW, async (_, request: CreateWindowIPCRequest) => {
-      if (!this.isValidCreateWindowRequest(request)) {
+      const parsed = CreateWindowRequestSchema.safeParse(request);
+      if (!parsed.success) {
         return this.createErrorResult('INVALID_REQUEST', 'Invalid window creation request');
       }
 
       try {
         const options: any = {};
-        if (request.bounds) {
+        if (parsed.data.bounds) {
           options.bounds = {
-            x: request.bounds.x || 0,
-            y: request.bounds.y || 0,
-            width: request.bounds.width,
-            height: request.bounds.height,
+            x: parsed.data.bounds.x || 0,
+            y: parsed.data.bounds.y || 0,
+            width: parsed.data.bounds.width,
+            height: parsed.data.bounds.height,
           };
         }
-        if (request.alwaysOnTop !== undefined) {
-          options.alwaysOnTop = request.alwaysOnTop;
+        if (parsed.data.alwaysOnTop !== undefined) {
+          options.alwaysOnTop = parsed.data.alwaysOnTop;
         }
 
-        await this.windowManager.createWindow(request.type, options);
+        await this.windowManager.createWindow(parsed.data.type, options);
         return this.createSuccessResult(undefined);
       } catch (error) {
         return this.createErrorResult('WINDOW_CREATION_FAILED', 'Failed to create window', { error });
@@ -290,6 +319,9 @@ export class PomodoroIPCHandler {
     // Set always on top
     ipcMain.handle(WINDOW_CHANNELS.SET_ALWAYS_ON_TOP, async (event, alwaysOnTop: boolean) => {
       try {
+        if (typeof alwaysOnTop !== 'boolean') {
+          return this.createErrorResult('INVALID_REQUEST', 'Invalid alwaysOnTop flag');
+        }
         const window = BrowserWindow.fromWebContents(event.sender);
         if (window) {
           window.setAlwaysOnTop(alwaysOnTop);
@@ -323,7 +355,7 @@ export class PomodoroIPCHandler {
   }
 
   /**
-   * Setup application-related IPC channels
+   * Setup application-related IPC channels.
    */
   private setupAppChannels(): void {
     // Quit application
@@ -354,15 +386,16 @@ export class PomodoroIPCHandler {
 
     // Show notification
     ipcMain.handle(APP_CHANNELS.SHOW_NOTIFICATION, async (_, request: ShowNotificationIPCRequest) => {
-      if (!this.isValidNotificationRequest(request)) {
+      const parsed = ShowNotificationRequestSchema.safeParse(request);
+      if (!parsed.success) {
         return this.createErrorResult('INVALID_NOTIFICATION', 'Invalid notification request');
       }
 
       try {
         await this.notificationService.showCustomNotification(
-          request.title,
-          request.body,
-          request.silent
+          parsed.data.title,
+          parsed.data.body,
+          parsed.data.silent
         );
         return this.createSuccessResult(undefined);
       } catch (error) {
@@ -372,7 +405,7 @@ export class PomodoroIPCHandler {
   }
 
   /**
-   * Setup event broadcasting for timer events
+   * Setup event broadcasting for timer events.
    */
   private setupEventBroadcasting(): void {
     // Subscribe to Pomodoro timer events and broadcast to all windows
@@ -390,7 +423,7 @@ export class PomodoroIPCHandler {
   }
 
   /**
-   * Broadcast message to all renderer windows
+   * Broadcast message to all renderer windows.
    */
   private broadcastToAllWindows(channel: string, data: any): void {
     BrowserWindow.getAllWindows().forEach(window => {
@@ -401,7 +434,7 @@ export class PomodoroIPCHandler {
   }
 
   /**
-   * Convert service result to IPC result format
+   * Convert service result to IPC result format.
    */
   private convertToIPCResult<T>(result: any): IPCResult<T> {
     if (result.success) {
@@ -421,16 +454,12 @@ export class PomodoroIPCHandler {
     }
   }
 
-  /**
-   * Create success IPC result
-   */
+  /** Create success IPC result. */
   private createSuccessResult<T>(data: T): IPCResult<T> {
     return { success: true, data };
   }
 
-  /**
-   * Create error IPC result
-   */
+  /** Create error IPC result. */
   private createErrorResult(code: string, message: string, details?: Record<string, unknown>): IPCResult<never> {
     const error: IPCError = { code, message };
     if (details) {
@@ -443,9 +472,7 @@ export class PomodoroIPCHandler {
     };
   }
 
-  /**
-   * Validation methods
-   */
+  /** Validation methods. */
   private isValidTimerConfig(config: any): config is Partial<TimerConfig> {
     if (!config || typeof config !== 'object') return false;
 
