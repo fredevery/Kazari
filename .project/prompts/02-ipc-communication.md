@@ -1,3 +1,22 @@
+---
+id: IPC-001
+title: Secure IPC Communication System
+status: in-progress
+owner: core
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Rate limiting returns RATE_LIMITED on hot calls and TIMEOUT on long operations
+  - window:get-state reports the correct WindowType (no placeholders)
+  - Docs updated for pomodoro.getHistory and practiced error codes
+  - Preload surface matches docs; no unused preload entry built
+tests:
+  - src/main/infrastructure/pomodoro-ipc-handler.*.test.ts
+  - src/preload/*.test.ts
+  - src/main/infrastructure/pomodoro-ipc-handler.validation.test.ts
+lastUpdated: 2025-08-27
+---
+
 # Secure IPC Communication System
 
 Design and implement a secure, structured Inter-Process Communication (IPC) system for Electron applications that ensures safe communication between main and renderer processes while maintaining type safety and following security best practices.

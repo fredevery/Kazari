@@ -1,3 +1,20 @@
+---
+id: UI-008
+title: Planning Phase Interface
+status: planned
+owner: core
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Daily and pre-session planning workflows integrated with tasks
+  - Drag-and-drop prioritization with persistence and IPC triggers
+  - Metrics on planned vs actual; tests for flows
+tests:
+  - src/renderer/presentation/components/*.test.ts
+  - src/renderer/application/slices/*.test.ts
+lastUpdated: 2025-08-27
+---
+
 # Planning Phase Interface
 
 The Planning Phase Interface provides users with structured daily and session planning capabilities that integrate seamlessly with the Task Management System and Pomodoro Timer System. This interface addresses the critical gap between having a list of tasks and effectively organizing them for productive work sessions. By providing dedicated planning workflows for both daily planning and pre-session preparation, it transforms task management from a reactive activity into a proactive productivity strategy that helps users prioritize effectively and maintain focus throughout their work sessions.

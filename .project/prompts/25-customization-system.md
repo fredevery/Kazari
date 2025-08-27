@@ -1,3 +1,19 @@
+---
+id: CUST-025
+title: Customization System
+status: planned
+owner: core
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Theming and preferences UI with secure persistence and migration
+  - IPC sync across windows; import/export supported
+  - Accessibility-friendly themes; validation/migration tested
+tests:
+  - settings repo tests; UI tests
+lastUpdated: 2025-08-27
+---
+
 # Customization System
 
 Implement a comprehensive customization system for the Kazari desktop productivity application that provides users with flexible theme selection, preference management, and configuration options. This system will ensure settings are persisted securely, synchronized across all application windows, and provide an intuitive user interface for customization.

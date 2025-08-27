@@ -1,3 +1,20 @@
+---
+id: UI-007
+title: Dashboard Interface
+status: planned
+owner: core
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Real-time metrics, session history, and quick actions
+  - Syncs with timer state/events; accessible and performant
+  - Daily/weekly/monthly insights visible with tests
+tests:
+  - src/renderer/presentation/components/*.test.ts
+  - src/renderer/application/slices/*.test.ts
+lastUpdated: 2025-08-27
+---
+
 # Dashboard Interface
 
 The Dashboard Interface serves as the central hub for the Kazari productivity application, providing users with comprehensive productivity metrics, quick access to all app features, and an intuitive overview of their daily progress. It acts as the main control center where users can navigate between different phases (planning, focus, break), monitor their session statistics, track task completion, and access settings and customization options. This addresses the need for a unified interface that gives users complete visibility into their productivity patterns while providing seamless navigation to all application features.

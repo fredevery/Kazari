@@ -1,3 +1,19 @@
+---
+id: A11Y-016
+title: Accessibility Implementation
+status: planned
+owner: core
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - WCAG 2.1 AA: keyboard navigation, roles/labels, contrast, focus management
+  - Accessible timers and notifications with screen reader support
+  - Tests for critical flows and components
+tests:
+  - src/renderer/**/*.test.tsx
+lastUpdated: 2025-08-27
+---
+
 # Accessibility Implementation
 
 _Create a comprehensive accessibility implementation for the Kazari Electron application that ensures all windows, components, and features are fully accessible to users with disabilities, following WCAG 2.1 AA guidelines, inclusive design principles, and providing extensive keyboard navigation and screen reader support._

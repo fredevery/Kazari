@@ -1,3 +1,19 @@
+---
+id: DEV-021
+title: Development Workflow
+status: planned
+owner: devexp
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Hot reload, debugging, scripts, and docs; pre-commit hooks
+  - Source maps and fast iteration; onboarding scripts
+  - Branch protection and PR workflow enforced
+tests:
+  - lint/type-check workflows
+lastUpdated: 2025-08-27
+---
+
 # Development Workflow
 
 Establish a comprehensive development workflow for the Kazari desktop productivity application that enables efficient development, debugging, and collaboration. This workflow will provide developers with the tools, scripts, and procedures needed to contribute effectively to the project while maintaining code quality and consistency.

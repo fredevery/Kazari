@@ -1,3 +1,19 @@
+---
+id: UI-010
+title: React Renderer Process Architecture
+status: planned
+owner: core
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Shared component patterns across windows; robust error boundaries
+  - IPC integration typed and secure; performance guardrails in place
+  - Accessibility compliance with tests
+tests:
+  - src/renderer/**/*.test.tsx
+lastUpdated: 2025-08-27
+---
+
 # React Renderer Process Architecture
 
 The React Renderer Process forms the user interface layer of the Kazari desktop application, providing responsive and intuitive interfaces for all productivity features across multiple windows. It manages component hierarchy, local state, and secure communication with the Electron main process through IPC APIs. This addresses the need for a maintainable, type-safe, and performant frontend architecture that supports hot reloading during development, efficient state management, and seamless integration with Electron's multi-window environment.

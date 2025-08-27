@@ -1,0 +1,287 @@
+# Roadmap Status
+
+Generated: 2025-08-27T11:45:26.028Z
+
+## in-progress (1)
+
+- IPC-001 — Secure IPC Communication System
+  - file: .project/prompts/02-ipc-communication.md
+  - acceptance:
+    - Rate limiting returns RATE_LIMITED on hot calls and TIMEOUT on long operations
+    - window:get-state reports the correct WindowType (no placeholders)
+    - Docs updated for pomodoro.getHistory and practiced error codes
+    - Preload surface matches docs; no unused preload entry built
+  - tests:
+    - src/main/infrastructure/pomodoro-ipc-handler.*.test.ts
+    - src/preload/*.test.ts
+    - src/main/infrastructure/pomodoro-ipc-handler.validation.test.ts
+  - updated: 2025-08-27
+
+## planned (28)
+
+- WIN-003 — Multi-Window Management System
+  - file: .project/prompts/03-multi-window-management.md
+  - acceptance:
+    - Windows persist/restore bounds and always-on-top/z-index rules by WindowType
+    - Floating Countdown elevates in final focus minute and stays in-bounds on multi-monitor
+    - Timer state stays synchronized across Dashboard/Break/Floating via IPC
+    - Tests cover create/close/focus, positioning, and cleanup
+  - tests:
+    - src/main/infrastructure/window-manager.*.test.ts
+    - src/main/infrastructure/pomodoro-ipc-handler.*.test.ts
+  - updated: 2025-08-27
+- TASK-004 — Task Management System
+  - file: .project/prompts/04-task-management.md
+  - acceptance:
+    - CRUD, sorting/filtering, and bulk operations persisted and type-safe
+    - Session planning integrates tasks with Pomodoro phases
+    - Analytics update on completion; export supported
+    - Tests for reducers, persistence, IPC sync
+  - tests:
+    - src/renderer/application/slices/*.test.ts
+    - src/main/infrastructure/repositories/*.test.ts
+  - updated: 2025-08-27
+- UI-005 — Break Screen System
+  - file: .project/prompts/05-break-screen-system.md
+  - acceptance:
+    - Fullscreen break window with overrun visualization and smooth transitions
+    - Real-time updates via IPC; accessible controls to end break anytime
+    - Persists across sleep/wake; tests for focus/blur handling
+  - tests:
+    - src/main/infrastructure/window-manager.*.test.ts
+    - src/renderer/presentation/components/*.test.ts
+  - updated: 2025-08-27
+- UI-006 — Floating Countdown Window
+  - file: .project/prompts/06-floating-countdown.md
+  - acceptance:
+    - Small always-on-top window that auto-elevates in final minute
+    - Position persistence; stays within visible bounds on multi-monitor
+    - Visual states for running/paused/low-time; IPC-synced
+  - tests:
+    - src/main/infrastructure/window-manager.*.test.ts
+    - src/renderer/presentation/components/*.test.ts
+  - updated: 2025-08-27
+- UI-007 — Dashboard Interface
+  - file: .project/prompts/07-dashboard-interface.md
+  - acceptance:
+    - Real-time metrics, session history, and quick actions
+    - Syncs with timer state/events; accessible and performant
+    - Daily/weekly/monthly insights visible with tests
+  - tests:
+    - src/renderer/presentation/components/*.test.ts
+    - src/renderer/application/slices/*.test.ts
+  - updated: 2025-08-27
+- UI-008 — Planning Phase Interface
+  - file: .project/prompts/08-planning-phase.md
+  - acceptance:
+    - Daily and pre-session planning workflows integrated with tasks
+    - Drag-and-drop prioritization with persistence and IPC triggers
+    - Metrics on planned vs actual; tests for flows
+  - tests:
+    - src/renderer/presentation/components/*.test.ts
+    - src/renderer/application/slices/*.test.ts
+  - updated: 2025-08-27
+- MAIN-009 — Electron Main Process Architecture
+  - file: .project/prompts/09-electron-main-process.md
+  - acceptance:
+    - Main orchestrates windows, timer services, and secure IPC with CSP enforced
+    - Startup/shutdown lifecycle with cleanup and recovery tested
+    - No renderer nodeIntegration; contextIsolation enabled across windows
+  - tests:
+    - src/main/**/*.test.ts
+    - src/main/infrastructure/ipc-*.test.ts
+  - updated: 2025-08-27
+- UI-010 — React Renderer Process Architecture
+  - file: .project/prompts/10-renderer-process.md
+  - acceptance:
+    - Shared component patterns across windows; robust error boundaries
+    - IPC integration typed and secure; performance guardrails in place
+    - Accessibility compliance with tests
+  - tests:
+    - src/renderer/**/*.test.tsx
+  - updated: 2025-08-27
+- PRELOAD-011 — Electron Preload Scripts Security Layer
+  - file: .project/prompts/11-preload-scripts.md
+  - acceptance:
+    - contextBridge API matches docs with schema validation
+    - Errors sanitized; logging for violations; versioned API stability
+    - High-frequency IPC performance optimized
+  - tests:
+    - src/preload/*.test.ts
+  - updated: 2025-08-27
+- DATA-012 — Data Persistence and Storage Management
+  - file: .project/prompts/12-data-persistence.md
+  - acceptance:
+    - Secure persistence with migrations and encrypted sensitive values
+    - Consistent sync between in-memory state and storage across windows
+    - Backup/export and recovery flows verified
+  - tests:
+    - src/main/infrastructure/repositories/*.test.ts
+    - src/main/**/*.integration.test.ts
+  - updated: 2025-08-27
+- UX-013 — Complete User Journey Workflow System
+  - file: .project/prompts/13-user-workflows.md
+  - acceptance:
+    - End-to-end flow from planning→focus→break with recovery from interruptions
+    - Cross-window synchronization and prompts with accessible guidance
+    - Measurable metrics for workflow effectiveness
+  - tests:
+    - src/main/**/*.integration.test.ts
+    - src/renderer/**/*.test.tsx
+  - updated: 2025-08-27
+- ERR-014 — Error Handling and Recovery System
+  - file: .project/prompts/14-error-handling.md
+  - acceptance:
+    - Typed errors with codes across IPC and services; user-friendly screens
+    - Recovery paths and retries with backoff; logs structured and sanitized
+    - Optional external reporting behind a flag
+  - tests:
+    - src/main/**/*.test.ts
+    - src/renderer/**/*.test.tsx
+  - updated: 2025-08-27
+- NOTIF-015 — Notifications System for Phase Transitions and Session Management
+  - file: .project/prompts/15-notifications-system.md
+  - acceptance:
+    - Native notifications with actions; respects DnD; accessible; rate limited
+    - User preferences persisted; history view; precise timer integration
+    - Cross-platform parity with fallbacks
+  - tests:
+    - src/main/application/services/notification-service.*.test.ts
+  - updated: 2025-08-27
+- A11Y-016 — Accessibility Implementation
+  - file: .project/prompts/16-accessibility.md
+  - acceptance:
+    - WCAG 2.1 AA: keyboard navigation, roles/labels, contrast, focus management
+    - Accessible timers and notifications with screen reader support
+    - Tests for critical flows and components
+  - tests:
+    - src/renderer/**/*.test.tsx
+  - updated: 2025-08-27
+- BUILD-017 — Vite-Based Electron Build Configuration
+  - file: .project/prompts/17-vite-configuration.md
+  - acceptance:
+    - Separate builds for main/preload/renderer with HMR and type-checking
+    - Electron Builder integration; env management; source maps
+    - CI build passes across platforms
+  - tests:
+    - configs/**/*.test.*
+    - build scripts dry-run in CI
+  - updated: 2025-08-27
+- TS-018 — TypeScript Integration and Project Architecture
+  - file: .project/prompts/18-typescript-integration.md
+  - acceptance:
+    - Project references; strict mode; path mapping across processes
+    - Branded types and documented models; typed IPC contracts
+    - Type-check clean in CI
+  - tests:
+    - type-check job in CI
+  - updated: 2025-08-27
+- SEC-019 — Electron Security Implementation
+  - file: .project/prompts/19-security-implementation.md
+  - acceptance:
+    - Context isolation, CSP, fuses, and sandbox settings configured
+    - IPC validation with rate limiting and sanitized errors
+    - Secure storage for sensitive data; security tests in CI
+  - tests:
+    - docs/ipc/*.md (kept in sync)
+    - src/main/**/*.test.ts
+  - updated: 2025-08-27
+- TEST-020 — Testing Infrastructure
+  - file: .project/prompts/20-testing-infrastructure.md
+  - acceptance:
+    - Unit, integration, E2E (Playwright) with coverage thresholds
+    - CI integration and reports; factories/fixtures in place
+    - Accessibility and performance tests wired
+  - tests:
+    - jest and playwright configs
+  - updated: 2025-08-27
+- DEV-021 — Development Workflow
+  - file: .project/prompts/21-development-workflow.md
+  - acceptance:
+    - Hot reload, debugging, scripts, and docs; pre-commit hooks
+    - Source maps and fast iteration; onboarding scripts
+    - Branch protection and PR workflow enforced
+  - tests:
+    - lint/type-check workflows
+  - updated: 2025-08-27
+- BUILD-022 — Build and Packaging
+  - file: .project/prompts/22-build-and-packaging.md
+  - acceptance:
+    - Production builds, signing, versioning, and installers
+    - Artifact integrity and smoke tests; auto-updates channel-ready
+    - Reproducible builds in CI
+  - tests:
+    - CI build matrix
+  - updated: 2025-08-27
+- PERF-023 — Performance Optimization
+  - file: .project/prompts/23-performance-optimization.md
+  - acceptance:
+    - Startup <3s; memory/CPU budgets met; bundle sizes optimized
+    - Profiling infra and perf regressions tests in CI
+    - IPC tick throttling guardrails
+  - tests:
+    - perf tests and budgets in CI
+  - updated: 2025-08-27
+- LOG-024 — Logging and Monitoring
+  - file: .project/prompts/24-logging-and-monitoring.md
+  - acceptance:
+    - Structured logs with levels; error reporting optional and privacy-safe
+    - Metrics collection/dashboard; alerts for critical issues
+    - Rotation/retention policies in place
+  - tests:
+    - loggers unit tests; CI checks
+  - updated: 2025-08-27
+- CUST-025 — Customization System
+  - file: .project/prompts/25-customization-system.md
+  - acceptance:
+    - Theming and preferences UI with secure persistence and migration
+    - IPC sync across windows; import/export supported
+    - Accessibility-friendly themes; validation/migration tested
+  - tests:
+    - settings repo tests; UI tests
+  - updated: 2025-08-27
+- ANALYTICS-026 — Productivity Analytics System
+  - file: .project/prompts/26-productivity-analytics.md
+  - acceptance:
+    - Real-time and historical metrics with dashboard visualizations
+    - Privacy-preserving, local-first; export to CSV/JSON
+    - Performance-neutral; tested
+  - tests:
+    - analytics reducers/services tests
+  - updated: 2025-08-27
+- INTEG-027 — Integration Framework
+  - file: .project/prompts/27-integration-framework.md
+  - acceptance:
+    - Plugin architecture with permissions, lifecycle, discovery
+    - SDK docs and types; sandboxing; error handling
+    - Versioning and dependency management
+  - tests:
+    - plugin loader tests
+  - updated: 2025-08-27
+- UPDATE-028 — Auto-Update Mechanism
+  - file: .project/prompts/28-update-mechanism.md
+  - acceptance:
+    - Auto-update check/download/install with deferral and rollback
+    - Secure channel, signatures, staged rollout, offline support
+    - Non-disruptive to active timers; logs for audit
+  - tests:
+    - update flow tests (mocked)
+  - updated: 2025-08-27
+- QUALITY-029 — Code Quality Standards and Process
+  - file: .project/prompts/29-code-quality.md
+  - acceptance:
+    - Lint/format/static analysis enforced; coverage thresholds
+    - Pre-commit hooks; debt tracking and reporting
+    - Docs and style guides published
+  - tests:
+    - lint/type-check/coverage gates in CI
+  - updated: 2025-08-27
+- CI-030 — CI/CD Deployment Pipeline
+  - file: .project/prompts/30-deployment-pipeline.md
+  - acceptance:
+    - Multi-platform builds, tests, signing, and release automation
+    - Semantic versioning and changelogs; alerts; rollbacks
+    - Secure dependency and artifact management
+  - tests:
+    - GitHub Actions workflows
+  - updated: 2025-08-27

@@ -1,3 +1,19 @@
+---
+id: NOTIF-015
+title: Notifications System for Phase Transitions and Session Management
+status: planned
+owner: core
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Native notifications with actions; respects DnD; accessible; rate limited
+  - User preferences persisted; history view; precise timer integration
+  - Cross-platform parity with fallbacks
+tests:
+  - src/main/application/services/notification-service.*.test.ts
+lastUpdated: 2025-08-27
+---
+
 # Notifications System for Phase Transitions and Session Management
 
 _Implement a comprehensive notifications system for the Kazari Electron application that provides timely, accessible, and contextually appropriate notifications for phase transitions, break reminders, session completion, and other productivity events while respecting user preferences and focus sessions._

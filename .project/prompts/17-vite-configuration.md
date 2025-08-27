@@ -1,3 +1,20 @@
+---
+id: BUILD-017
+title: Vite-Based Electron Build Configuration
+status: planned
+owner: build
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Separate builds for main/preload/renderer with HMR and type-checking
+  - Electron Builder integration; env management; source maps
+  - CI build passes across platforms
+tests:
+  - configs/**/*.test.*
+  - build scripts dry-run in CI
+lastUpdated: 2025-08-27
+---
+
 # Vite-Based Electron Build Configuration
 
 _Set up a comprehensive Vite-based build configuration for the Kazari Electron application that provides fast development builds, hot module reloading, TypeScript support, and optimized production builds for all Electron entry points (main, preload, and renderer processes)._

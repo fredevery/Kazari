@@ -1,3 +1,19 @@
+---
+id: UPDATE-028
+title: Auto-Update Mechanism
+status: planned
+owner: release
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Auto-update check/download/install with deferral and rollback
+  - Secure channel, signatures, staged rollout, offline support
+  - Non-disruptive to active timers; logs for audit
+tests:
+  - update flow tests (mocked)
+lastUpdated: 2025-08-27
+---
+
 # Auto-Update Mechanism
 
 _Implement a secure and reliable auto-update system for the Electron application that manages version control, downloads updates seamlessly, notifies users appropriately, and provides rollback capabilities without disrupting active user workflows._

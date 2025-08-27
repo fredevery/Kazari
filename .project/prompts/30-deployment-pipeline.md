@@ -1,3 +1,19 @@
+---
+id: CI-030
+title: CI/CD Deployment Pipeline
+status: planned
+owner: build
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Multi-platform builds, tests, signing, and release automation
+  - Semantic versioning and changelogs; alerts; rollbacks
+  - Secure dependency and artifact management
+tests:
+  - GitHub Actions workflows
+lastUpdated: 2025-08-27
+---
+
 # CI/CD Deployment Pipeline
 
 _Establish a comprehensive CI/CD deployment pipeline for automated testing, building, and releasing the Kazari Electron application across multiple platforms with integrated test coverage, dependency management, and release automation._

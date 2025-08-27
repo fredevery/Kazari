@@ -1,3 +1,21 @@
+---
+id: WIN-003
+title: Multi-Window Management System
+status: planned
+owner: core
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Windows persist/restore bounds and always-on-top/z-index rules by WindowType
+  - Floating Countdown elevates in final focus minute and stays in-bounds on multi-monitor
+  - Timer state stays synchronized across Dashboard/Break/Floating via IPC
+  - Tests cover create/close/focus, positioning, and cleanup
+tests:
+  - src/main/infrastructure/window-manager.*.test.ts
+  - src/main/infrastructure/pomodoro-ipc-handler.*.test.ts
+lastUpdated: 2025-08-27
+---
+
 # Multi-Window Management System
 
 The Multi-Window Management System orchestrates the creation, coordination, and lifecycle management of multiple Electron windows within the Kazari desktop application. This system ensures seamless communication between the Dashboard, Floating Countdown, and Break Screen windows, maintaining synchronized timer states and managing window behaviors such as z-index ordering and always-on-top functionality. This addresses the complex challenge of maintaining consistent user experience across multiple concurrent windows while ensuring proper window hierarchy and real-time synchronization.

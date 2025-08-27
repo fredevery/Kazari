@@ -1,3 +1,19 @@
+---
+id: INTEG-027
+title: Integration Framework
+status: planned
+owner: platform
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Plugin architecture with permissions, lifecycle, discovery
+  - SDK docs and types; sandboxing; error handling
+  - Versioning and dependency management
+tests:
+  - plugin loader tests
+lastUpdated: 2025-08-27
+---
+
 # Integration Framework
 
 _Architect an extensible integration framework that enables third-party developers to seamlessly integrate with the Kazari productivity application while maintaining security, stability, and modularity. This framework will serve as the foundation for a plugin ecosystem that can extend functionality without compromising the core application._

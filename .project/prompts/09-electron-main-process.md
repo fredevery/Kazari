@@ -1,3 +1,20 @@
+---
+id: MAIN-009
+title: Electron Main Process Architecture
+status: planned
+owner: core
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Main orchestrates windows, timer services, and secure IPC with CSP enforced
+  - Startup/shutdown lifecycle with cleanup and recovery tested
+  - No renderer nodeIntegration; contextIsolation enabled across windows
+tests:
+  - src/main/**/*.test.ts
+  - src/main/infrastructure/ipc-*.test.ts
+lastUpdated: 2025-08-27
+---
+
 # Electron Main Process Architecture
 
 The Electron Main Process serves as the central orchestrator for the Kazari desktop application, managing window lifecycle, application state, system integration, and secure communication with renderer processes. It acts as the backbone that coordinates all application functionality while maintaining security boundaries and ensuring proper separation of concerns. This addresses the critical need for a robust, scalable, and maintainable architecture that can handle multi-window timer synchronization, secure IPC communication, and future feature extensibility.

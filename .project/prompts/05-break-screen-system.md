@@ -1,3 +1,20 @@
+---
+id: UI-005
+title: Break Screen System
+status: planned
+owner: core
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Fullscreen break window with overrun visualization and smooth transitions
+  - Real-time updates via IPC; accessible controls to end break anytime
+  - Persists across sleep/wake; tests for focus/blur handling
+tests:
+  - src/main/infrastructure/window-manager.*.test.ts
+  - src/renderer/presentation/components/*.test.ts
+lastUpdated: 2025-08-27
+---
+
 # Break Screen System
 
 The Break Screen System provides a dedicated full-screen interface for managing user breaks within the Kazari productivity application. It creates an immersive break experience that encourages users to step away from their work while maintaining awareness of break duration and overrun. The system displays a countdown timer, provides visual feedback for break overruns, and allows users to end breaks at any time. This addresses the common problem of unstructured breaks that can either be too short to be restful or too long to maintain productivity momentum.

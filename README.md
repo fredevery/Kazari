@@ -10,6 +10,10 @@ A cross-platform desktop productivity timer application built with Electron, Rea
 - Clean architecture with TypeScript
 - Cross-platform support (Windows, macOS, Linux)
 
+## Roadmap Status
+
+See current roadmap status and item metadata in `docs/roadmap/status.md`.
+
 ## Development
 
 ### Prerequisites

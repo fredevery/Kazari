@@ -1,0 +1,544 @@
+{
+  "generatedAt": "2025-08-27T11:45:26.027Z",
+  "items": [
+    {
+      "id": "IPC-001",
+      "title": "Secure IPC Communication System",
+      "status": "in-progress",
+      "owner": "core",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Rate limiting returns RATE_LIMITED on hot calls and TIMEOUT on long operations",
+        "window:get-state reports the correct WindowType (no placeholders)",
+        "Docs updated for pomodoro.getHistory and practiced error codes",
+        "Preload surface matches docs; no unused preload entry built"
+      ],
+      "tests": [
+        "src/main/infrastructure/pomodoro-ipc-handler.*.test.ts",
+        "src/preload/*.test.ts",
+        "src/main/infrastructure/pomodoro-ipc-handler.validation.test.ts"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/02-ipc-communication.md"
+    },
+    {
+      "id": "WIN-003",
+      "title": "Multi-Window Management System",
+      "status": "planned",
+      "owner": "core",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Windows persist/restore bounds and always-on-top/z-index rules by WindowType",
+        "Floating Countdown elevates in final focus minute and stays in-bounds on multi-monitor",
+        "Timer state stays synchronized across Dashboard/Break/Floating via IPC",
+        "Tests cover create/close/focus, positioning, and cleanup"
+      ],
+      "tests": [
+        "src/main/infrastructure/window-manager.*.test.ts",
+        "src/main/infrastructure/pomodoro-ipc-handler.*.test.ts"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/03-multi-window-management.md"
+    },
+    {
+      "id": "TASK-004",
+      "title": "Task Management System",
+      "status": "planned",
+      "owner": "core",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "CRUD, sorting/filtering, and bulk operations persisted and type-safe",
+        "Session planning integrates tasks with Pomodoro phases",
+        "Analytics update on completion; export supported",
+        "Tests for reducers, persistence, IPC sync"
+      ],
+      "tests": [
+        "src/renderer/application/slices/*.test.ts",
+        "src/main/infrastructure/repositories/*.test.ts"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/04-task-management.md"
+    },
+    {
+      "id": "UI-005",
+      "title": "Break Screen System",
+      "status": "planned",
+      "owner": "core",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Fullscreen break window with overrun visualization and smooth transitions",
+        "Real-time updates via IPC; accessible controls to end break anytime",
+        "Persists across sleep/wake; tests for focus/blur handling"
+      ],
+      "tests": [
+        "src/main/infrastructure/window-manager.*.test.ts",
+        "src/renderer/presentation/components/*.test.ts"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/05-break-screen-system.md"
+    },
+    {
+      "id": "UI-006",
+      "title": "Floating Countdown Window",
+      "status": "planned",
+      "owner": "core",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Small always-on-top window that auto-elevates in final minute",
+        "Position persistence; stays within visible bounds on multi-monitor",
+        "Visual states for running/paused/low-time; IPC-synced"
+      ],
+      "tests": [
+        "src/main/infrastructure/window-manager.*.test.ts",
+        "src/renderer/presentation/components/*.test.ts"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/06-floating-countdown.md"
+    },
+    {
+      "id": "UI-007",
+      "title": "Dashboard Interface",
+      "status": "planned",
+      "owner": "core",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Real-time metrics, session history, and quick actions",
+        "Syncs with timer state/events; accessible and performant",
+        "Daily/weekly/monthly insights visible with tests"
+      ],
+      "tests": [
+        "src/renderer/presentation/components/*.test.ts",
+        "src/renderer/application/slices/*.test.ts"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/07-dashboard-interface.md"
+    },
+    {
+      "id": "UI-008",
+      "title": "Planning Phase Interface",
+      "status": "planned",
+      "owner": "core",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Daily and pre-session planning workflows integrated with tasks",
+        "Drag-and-drop prioritization with persistence and IPC triggers",
+        "Metrics on planned vs actual; tests for flows"
+      ],
+      "tests": [
+        "src/renderer/presentation/components/*.test.ts",
+        "src/renderer/application/slices/*.test.ts"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/08-planning-phase.md"
+    },
+    {
+      "id": "MAIN-009",
+      "title": "Electron Main Process Architecture",
+      "status": "planned",
+      "owner": "core",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Main orchestrates windows, timer services, and secure IPC with CSP enforced",
+        "Startup/shutdown lifecycle with cleanup and recovery tested",
+        "No renderer nodeIntegration; contextIsolation enabled across windows"
+      ],
+      "tests": [
+        "src/main/**/*.test.ts",
+        "src/main/infrastructure/ipc-*.test.ts"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/09-electron-main-process.md"
+    },
+    {
+      "id": "UI-010",
+      "title": "React Renderer Process Architecture",
+      "status": "planned",
+      "owner": "core",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Shared component patterns across windows; robust error boundaries",
+        "IPC integration typed and secure; performance guardrails in place",
+        "Accessibility compliance with tests"
+      ],
+      "tests": [
+        "src/renderer/**/*.test.tsx"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/10-renderer-process.md"
+    },
+    {
+      "id": "PRELOAD-011",
+      "title": "Electron Preload Scripts Security Layer",
+      "status": "planned",
+      "owner": "core",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "contextBridge API matches docs with schema validation",
+        "Errors sanitized; logging for violations; versioned API stability",
+        "High-frequency IPC performance optimized"
+      ],
+      "tests": [
+        "src/preload/*.test.ts"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/11-preload-scripts.md"
+    },
+    {
+      "id": "DATA-012",
+      "title": "Data Persistence and Storage Management",
+      "status": "planned",
+      "owner": "core",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Secure persistence with migrations and encrypted sensitive values",
+        "Consistent sync between in-memory state and storage across windows",
+        "Backup/export and recovery flows verified"
+      ],
+      "tests": [
+        "src/main/infrastructure/repositories/*.test.ts",
+        "src/main/**/*.integration.test.ts"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/12-data-persistence.md"
+    },
+    {
+      "id": "UX-013",
+      "title": "Complete User Journey Workflow System",
+      "status": "planned",
+      "owner": "core",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "End-to-end flow from planning→focus→break with recovery from interruptions",
+        "Cross-window synchronization and prompts with accessible guidance",
+        "Measurable metrics for workflow effectiveness"
+      ],
+      "tests": [
+        "src/main/**/*.integration.test.ts",
+        "src/renderer/**/*.test.tsx"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/13-user-workflows.md"
+    },
+    {
+      "id": "ERR-014",
+      "title": "Error Handling and Recovery System",
+      "status": "planned",
+      "owner": "core",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Typed errors with codes across IPC and services; user-friendly screens",
+        "Recovery paths and retries with backoff; logs structured and sanitized",
+        "Optional external reporting behind a flag"
+      ],
+      "tests": [
+        "src/main/**/*.test.ts",
+        "src/renderer/**/*.test.tsx"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/14-error-handling.md"
+    },
+    {
+      "id": "NOTIF-015",
+      "title": "Notifications System for Phase Transitions and Session Management",
+      "status": "planned",
+      "owner": "core",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Native notifications with actions; respects DnD; accessible; rate limited",
+        "User preferences persisted; history view; precise timer integration",
+        "Cross-platform parity with fallbacks"
+      ],
+      "tests": [
+        "src/main/application/services/notification-service.*.test.ts"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/15-notifications-system.md"
+    },
+    {
+      "id": "A11Y-016",
+      "title": "Accessibility Implementation",
+      "status": "planned",
+      "owner": "core",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "WCAG 2.1 AA: keyboard navigation, roles/labels, contrast, focus management",
+        "Accessible timers and notifications with screen reader support",
+        "Tests for critical flows and components"
+      ],
+      "tests": [
+        "src/renderer/**/*.test.tsx"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/16-accessibility.md"
+    },
+    {
+      "id": "BUILD-017",
+      "title": "Vite-Based Electron Build Configuration",
+      "status": "planned",
+      "owner": "build",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Separate builds for main/preload/renderer with HMR and type-checking",
+        "Electron Builder integration; env management; source maps",
+        "CI build passes across platforms"
+      ],
+      "tests": [
+        "configs/**/*.test.*",
+        "build scripts dry-run in CI"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/17-vite-configuration.md"
+    },
+    {
+      "id": "TS-018",
+      "title": "TypeScript Integration and Project Architecture",
+      "status": "planned",
+      "owner": "core",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Project references; strict mode; path mapping across processes",
+        "Branded types and documented models; typed IPC contracts",
+        "Type-check clean in CI"
+      ],
+      "tests": [
+        "type-check job in CI"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/18-typescript-integration.md"
+    },
+    {
+      "id": "SEC-019",
+      "title": "Electron Security Implementation",
+      "status": "planned",
+      "owner": "security",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Context isolation, CSP, fuses, and sandbox settings configured",
+        "IPC validation with rate limiting and sanitized errors",
+        "Secure storage for sensitive data; security tests in CI"
+      ],
+      "tests": [
+        "docs/ipc/*.md (kept in sync)",
+        "src/main/**/*.test.ts"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/19-security-implementation.md"
+    },
+    {
+      "id": "TEST-020",
+      "title": "Testing Infrastructure",
+      "status": "planned",
+      "owner": "qa",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Unit, integration, E2E (Playwright) with coverage thresholds",
+        "CI integration and reports; factories/fixtures in place",
+        "Accessibility and performance tests wired"
+      ],
+      "tests": [
+        "jest and playwright configs"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/20-testing-infrastructure.md"
+    },
+    {
+      "id": "DEV-021",
+      "title": "Development Workflow",
+      "status": "planned",
+      "owner": "devexp",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Hot reload, debugging, scripts, and docs; pre-commit hooks",
+        "Source maps and fast iteration; onboarding scripts",
+        "Branch protection and PR workflow enforced"
+      ],
+      "tests": [
+        "lint/type-check workflows"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/21-development-workflow.md"
+    },
+    {
+      "id": "BUILD-022",
+      "title": "Build and Packaging",
+      "status": "planned",
+      "owner": "build",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Production builds, signing, versioning, and installers",
+        "Artifact integrity and smoke tests; auto-updates channel-ready",
+        "Reproducible builds in CI"
+      ],
+      "tests": [
+        "CI build matrix"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/22-build-and-packaging.md"
+    },
+    {
+      "id": "PERF-023",
+      "title": "Performance Optimization",
+      "status": "planned",
+      "owner": "perf",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Startup <3s; memory/CPU budgets met; bundle sizes optimized",
+        "Profiling infra and perf regressions tests in CI",
+        "IPC tick throttling guardrails"
+      ],
+      "tests": [
+        "perf tests and budgets in CI"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/23-performance-optimization.md"
+    },
+    {
+      "id": "LOG-024",
+      "title": "Logging and Monitoring",
+      "status": "planned",
+      "owner": "core",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Structured logs with levels; error reporting optional and privacy-safe",
+        "Metrics collection/dashboard; alerts for critical issues",
+        "Rotation/retention policies in place"
+      ],
+      "tests": [
+        "loggers unit tests; CI checks"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/24-logging-and-monitoring.md"
+    },
+    {
+      "id": "CUST-025",
+      "title": "Customization System",
+      "status": "planned",
+      "owner": "core",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Theming and preferences UI with secure persistence and migration",
+        "IPC sync across windows; import/export supported",
+        "Accessibility-friendly themes; validation/migration tested"
+      ],
+      "tests": [
+        "settings repo tests; UI tests"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/25-customization-system.md"
+    },
+    {
+      "id": "ANALYTICS-026",
+      "title": "Productivity Analytics System",
+      "status": "planned",
+      "owner": "core",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Real-time and historical metrics with dashboard visualizations",
+        "Privacy-preserving, local-first; export to CSV/JSON",
+        "Performance-neutral; tested"
+      ],
+      "tests": [
+        "analytics reducers/services tests"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/26-productivity-analytics.md"
+    },
+    {
+      "id": "INTEG-027",
+      "title": "Integration Framework",
+      "status": "planned",
+      "owner": "platform",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Plugin architecture with permissions, lifecycle, discovery",
+        "SDK docs and types; sandboxing; error handling",
+        "Versioning and dependency management"
+      ],
+      "tests": [
+        "plugin loader tests"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/27-integration-framework.md"
+    },
+    {
+      "id": "UPDATE-028",
+      "title": "Auto-Update Mechanism",
+      "status": "planned",
+      "owner": "release",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Auto-update check/download/install with deferral and rollback",
+        "Secure channel, signatures, staged rollout, offline support",
+        "Non-disruptive to active timers; logs for audit"
+      ],
+      "tests": [
+        "update flow tests (mocked)"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/28-update-mechanism.md"
+    },
+    {
+      "id": "QUALITY-029",
+      "title": "Code Quality Standards and Process",
+      "status": "planned",
+      "owner": "qa",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Lint/format/static analysis enforced; coverage thresholds",
+        "Pre-commit hooks; debt tracking and reporting",
+        "Docs and style guides published"
+      ],
+      "tests": [
+        "lint/type-check/coverage gates in CI"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/29-code-quality.md"
+    },
+    {
+      "id": "CI-030",
+      "title": "CI/CD Deployment Pipeline",
+      "status": "planned",
+      "owner": "build",
+      "issue": "",
+      "pr": "",
+      "acceptanceCriteria": [
+        "Multi-platform builds, tests, signing, and release automation",
+        "Semantic versioning and changelogs; alerts; rollbacks",
+        "Secure dependency and artifact management"
+      ],
+      "tests": [
+        "GitHub Actions workflows"
+      ],
+      "lastUpdated": "2025-08-27",
+      "file": ".project/prompts/30-deployment-pipeline.md"
+    }
+  ]
+}

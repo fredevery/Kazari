@@ -1,3 +1,21 @@
+---
+id: TASK-004
+title: Task Management System
+status: planned
+owner: core
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - CRUD, sorting/filtering, and bulk operations persisted and type-safe
+  - Session planning integrates tasks with Pomodoro phases
+  - Analytics update on completion; export supported
+  - Tests for reducers, persistence, IPC sync
+tests:
+  - src/renderer/application/slices/*.test.ts
+  - src/main/infrastructure/repositories/*.test.ts
+lastUpdated: 2025-08-27
+---
+
 # Task Management System
 
 The Task Management System enables users to create, organize, and track their tasks throughout their productivity sessions. It integrates seamlessly with the Pomodoro Timer System to provide structured session planning, task prioritization, and completion tracking. This system addresses the common problem of staying organized and maintaining focus on the right tasks during productivity sessions. By allowing users to plan their sessions with specific tasks and track their progress, it transforms the basic Pomodoro technique into a comprehensive productivity workflow.

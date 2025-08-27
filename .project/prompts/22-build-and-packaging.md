@@ -1,3 +1,19 @@
+---
+id: BUILD-022
+title: Build and Packaging
+status: planned
+owner: build
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Production builds, signing, versioning, and installers
+  - Artifact integrity and smoke tests; auto-updates channel-ready
+  - Reproducible builds in CI
+tests:
+  - CI build matrix
+lastUpdated: 2025-08-27
+---
+
 # Build and Packaging
 
 Implement a comprehensive build and packaging system for the Kazari desktop productivity application that creates production-ready, signed, and distributable packages for all supported platforms. This system will ensure consistent, secure, and automated builds suitable for release to end users.

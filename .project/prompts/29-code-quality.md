@@ -1,3 +1,19 @@
+---
+id: QUALITY-029
+title: Code Quality Standards and Process
+status: planned
+owner: qa
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Lint/format/static analysis enforced; coverage thresholds
+  - Pre-commit hooks; debt tracking and reporting
+  - Docs and style guides published
+tests:
+  - lint/type-check/coverage gates in CI
+lastUpdated: 2025-08-27
+---
+
 # Code Quality Standards and Process
 
 _Establish comprehensive code quality standards and processes for the Kazari Electron application using Biome and project-specific coding guidelines to ensure all code is reviewed, tested, and meets maintainability requirements across all processes (main, preload, and renderer)._

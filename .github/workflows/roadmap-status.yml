@@ -1,0 +1,30 @@
+name: Generate Roadmap Status
+
+on:
+  push:
+    branches: [ main, rewrite ]
+    paths:
+      - '.project/prompts/**'
+      - 'scripts/generate-roadmap-status.cjs'
+  pull_request:
+    branches: [ main, rewrite ]
+    paths:
+      - '.project/prompts/**'
+      - 'scripts/generate-roadmap-status.cjs'
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Generate roadmap status
+        run: node scripts/generate-roadmap-status.cjs
+      - name: Upload roadmap status artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: roadmap-status
+          path: docs/roadmap/

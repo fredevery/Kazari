@@ -1,3 +1,20 @@
+---
+id: SEC-019
+title: Electron Security Implementation
+status: planned
+owner: security
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Context isolation, CSP, fuses, and sandbox settings configured
+  - IPC validation with rate limiting and sanitized errors
+  - Secure storage for sensitive data; security tests in CI
+tests:
+  - docs/ipc/*.md (kept in sync)
+  - src/main/**/*.test.ts
+lastUpdated: 2025-08-27
+---
+
 # Electron Security Implementation
 
 _Implement comprehensive security measures for the Kazari Electron application following security best practices, including Electron fuses, process sandboxing, minimal Node.js integration, secure IPC validation, encrypted data storage, and preparation for remote content and module sandboxes to protect against XSS, code injection, and unauthorized system access._

@@ -1,3 +1,20 @@
+---
+id: ERR-014
+title: Error Handling and Recovery System
+status: planned
+owner: core
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Typed errors with codes across IPC and services; user-friendly screens
+  - Recovery paths and retries with backoff; logs structured and sanitized
+  - Optional external reporting behind a flag
+tests:
+  - src/main/**/*.test.ts
+  - src/renderer/**/*.test.tsx
+lastUpdated: 2025-08-27
+---
+
 # Error Handling and Recovery System
 
 _Implement a comprehensive error handling and recovery system for the Kazari Electron application that provides robust error management across both main and renderer processes, displays user-friendly error screens, enables diagnostic logging, and optionally supports external error reporting services._

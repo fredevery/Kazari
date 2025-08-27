@@ -1,3 +1,19 @@
+---
+id: PERF-023
+title: Performance Optimization
+status: planned
+owner: perf
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Startup <3s; memory/CPU budgets met; bundle sizes optimized
+  - Profiling infra and perf regressions tests in CI
+  - IPC tick throttling guardrails
+tests:
+  - perf tests and budgets in CI
+lastUpdated: 2025-08-27
+---
+
 # Performance Optimization
 
 Implement comprehensive performance optimization strategies for the Kazari desktop productivity application to ensure optimal memory usage, CPU efficiency, and fast startup times. This optimization framework will provide monitoring, profiling, and actionable improvements for both main and renderer processes.

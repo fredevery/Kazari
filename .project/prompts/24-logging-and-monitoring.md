@@ -1,3 +1,19 @@
+---
+id: LOG-024
+title: Logging and Monitoring
+status: planned
+owner: core
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Structured logs with levels; error reporting optional and privacy-safe
+  - Metrics collection/dashboard; alerts for critical issues
+  - Rotation/retention policies in place
+tests:
+  - loggers unit tests; CI checks
+lastUpdated: 2025-08-27
+---
+
 # Logging and Monitoring
 
 Implement a comprehensive logging and monitoring system for the Kazari desktop productivity application that provides visibility into application behavior, performance metrics, error tracking, and diagnostic information across both main and renderer processes. This system will enable effective debugging, performance optimization, and proactive issue resolution.

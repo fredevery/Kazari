@@ -1,3 +1,19 @@
+---
+id: TEST-020
+title: Testing Infrastructure
+status: planned
+owner: qa
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Unit, integration, E2E (Playwright) with coverage thresholds
+  - CI integration and reports; factories/fixtures in place
+  - Accessibility and performance tests wired
+tests:
+  - jest and playwright configs
+lastUpdated: 2025-08-27
+---
+
 # Testing Infrastructure
 
 Establish a comprehensive testing infrastructure for the Kazari desktop productivity application to ensure reliability, maintainability, and quality across all components and user workflows. This infrastructure will support both unit testing for business logic and end-to-end testing for complete user scenarios.

@@ -1,3 +1,20 @@
+---
+id: UX-013
+title: Complete User Journey Workflow System
+status: planned
+owner: core
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - End-to-end flow from planning→focus→break with recovery from interruptions
+  - Cross-window synchronization and prompts with accessible guidance
+  - Measurable metrics for workflow effectiveness
+tests:
+  - src/main/**/*.integration.test.ts
+  - src/renderer/**/*.test.tsx
+lastUpdated: 2025-08-27
+---
+
 # Complete User Journey Workflow System
 
 The Complete User Journey Workflow System orchestrates the entire user experience from daily planning through focus sessions to breaks and back. This system ensures smooth state transitions, clear user prompts, and synchronized experiences across all application windows and phases. It addresses the critical need for a cohesive workflow that guides users through productivity cycles while maintaining state consistency, providing clear feedback, and handling edge cases gracefully. This comprehensive system transforms discrete productivity features into a unified, intuitive user experience.

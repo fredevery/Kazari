@@ -30,7 +30,9 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx}\"",
     "dist": "npm run build && electron-builder",
     "dist:dir": "npm run build && electron-builder --dir",
-    "postinstall": "electron-builder install-app-deps"
+  "postinstall": "electron-builder install-app-deps",
+  "roadmap:generate": "node scripts/generate-roadmap-status.cjs",
+  "roadmap:sync": "node scripts/seed-project-and-issues.cjs"
   },
   "engines": {
     "node": ">=18.0.0"

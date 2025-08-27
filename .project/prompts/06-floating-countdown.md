@@ -1,3 +1,20 @@
+---
+id: UI-006
+title: Floating Countdown Window
+status: planned
+owner: core
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Small always-on-top window that auto-elevates in final minute
+  - Position persistence; stays within visible bounds on multi-monitor
+  - Visual states for running/paused/low-time; IPC-synced
+tests:
+  - src/main/infrastructure/window-manager.*.test.ts
+  - src/renderer/presentation/components/*.test.ts
+lastUpdated: 2025-08-27
+---
+
 # Floating Countdown Window
 
 The Floating Countdown Window is a small, persistent timer display that provides users with continuous visibility of their focus session progress without being intrusive. It serves as an always-present reminder of remaining time while allowing users to maintain focus on their work. The window intelligently manages its visibility and z-index behavior, staying unobtrusive for most of the session but becoming prominent during the final minute to ensure users are aware of the approaching session end. This addresses the common problem of losing track of time during focused work sessions while avoiding the distraction of constantly visible timers.

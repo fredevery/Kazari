@@ -1,3 +1,19 @@
+---
+id: TS-018
+title: TypeScript Integration and Project Architecture
+status: planned
+owner: core
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Project references; strict mode; path mapping across processes
+  - Branded types and documented models; typed IPC contracts
+  - Type-check clean in CI
+tests:
+  - type-check job in CI
+lastUpdated: 2025-08-27
+---
+
 # TypeScript Integration and Project Architecture
 
 _Implement a comprehensive TypeScript integration for the Kazari Electron application using project references to share types across main, preload, and renderer processes, with complete type definitions for IPC channels, modules, and domain models to ensure type safety and maintainability throughout the codebase._

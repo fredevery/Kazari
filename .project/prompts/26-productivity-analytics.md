@@ -1,3 +1,19 @@
+---
+id: ANALYTICS-026
+title: Productivity Analytics System
+status: planned
+owner: core
+issue: ""
+pr: ""
+acceptanceCriteria:
+  - Real-time and historical metrics with dashboard visualizations
+  - Privacy-preserving, local-first; export to CSV/JSON
+  - Performance-neutral; tested
+tests:
+  - analytics reducers/services tests
+lastUpdated: 2025-08-27
+---
+
 # Productivity Analytics System
 
 _Implement a comprehensive productivity analytics system that tracks user performance, calculates meaningful metrics, and provides actionable insights. This system should integrate seamlessly with the existing timer and task management functionality to provide real-time analytics on the Dashboard, enabling users to understand their productivity patterns and make data-driven improvements to their workflow._
