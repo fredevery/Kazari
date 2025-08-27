@@ -212,18 +212,39 @@ async function ensureStatusField(projectId) {
   const current = ((fld && fld.options) ? fld.options : []).map(o => o.name);
   const needUpdate = desired.some(d => !current.includes(d)) || current.some(c => !desired.includes(c));
   if (needUpdate) {
-    const update = `mutation($projectId:ID!,$fieldId:ID!,$name:String!,$options:[ProjectV2SingleSelectFieldOptionInput!]!){ updateProjectV2SingleSelectField(input:{projectId:$projectId, fieldId:$fieldId, name:$name, options:$options}){ projectV2SingleSelectField{ id } } }`;
-    await ghGql(update, {
-      projectId,
-      fieldId: fld.id,
-      name: 'Status',
-      options: desired.map((n, i) => ({ name: n, colorId: (i % 15) + 1 }))
-    });
+    const optionsPayload = desired.map((n, i) => ({ name: n, colorId: (i % 15) + 1 }));
+    // Try the single-select update mutation; if not supported, continue without failing.
+    try {
+      const update = `mutation($projectId:ID!,$fieldId:ID!,$name:String!,$options:[ProjectV2SingleSelectFieldOptionInput!]!){ updateProjectV2SingleSelectField(input:{projectId:$projectId, fieldId:$fieldId, name:$name, options:$options}){ projectV2SingleSelectField{ id } } }`;
+      await ghGql(update, { projectId, fieldId: fld.id, name: 'Status', options: optionsPayload });
+    } catch (e) {
+      console.warn(`Warning: could not update Status options via GraphQL. Proceeding with existing options. ${e && e.message ? e.message : e}`);
+    }
   }
   const ref2 = await ghGql(q, { projectId });
   const fList2 = ((((ref2||{}).node||{}).fields||{}).nodes||[]);
   const fld2 = fList2.find(f => f && f.name === 'Status');
-  const optionMap = Object.fromEntries(((fld2 && fld2.options) ? fld2.options : []).map(o => [o.name, o.id]));
+  const options = (fld2 && fld2.options) ? fld2.options : [];
+  // Build a canonical-to-actual option map with fuzzy matching
+  const lowerOptions = options.map(o => ({ id: o.id, name: o.name, low: o.name.toLowerCase() }));
+  function findLike(names) {
+    for (const n of names) {
+      const low = n.toLowerCase();
+      const exact = lowerOptions.find(o => o.low === low);
+      if (exact) return exact.id;
+      const contains = lowerOptions.find(o => o.low.includes(low) || low.includes(o.low));
+      if (contains) return contains.id;
+    }
+    return undefined;
+  }
+  const mapped = new Map();
+  mapped.set('Backlog', findLike(['Backlog', 'To do', 'Todo', 'Planned']) || (options[0] && options[0].id));
+  mapped.set('Now', findLike(['Now', 'To do', 'Todo', 'Backlog']) || mapped.get('Backlog'));
+  mapped.set('In progress', findLike(['In progress', 'In Progress', 'Progress', 'Doing', 'WIP']));
+  mapped.set('Review', findLike(['Review', 'In review', 'QA', 'Code Review']));
+  mapped.set('Blocked', findLike(['Blocked', 'On hold', 'Blocked/On hold', 'Hold']));
+  mapped.set('Done', findLike(['Done', 'Completed', 'Complete', 'Closed']));
+  const optionMap = Object.fromEntries(Array.from(mapped.entries()).filter(([,v]) => !!v));
   return { fieldId: fld2.id, optionMap };
 }
 
@@ -244,6 +265,10 @@ async function addOrGetProjectItem(projectId, issueNodeId, issueNumber) {
 
 async function setStatus(projectId, itemId, fieldId, statusName, optionMap) {
   const optionId = optionMap[statusName] || optionMap['Backlog'];
+  if (!optionId) {
+    console.warn(`Warning: No single-select option found for '${statusName}' or 'Backlog'. Skipping status update.`);
+    return;
+  }
   const mut = `mutation($projectId:ID!,$itemId:ID!,$fieldId:ID!,$optionId:String!){ updateProjectV2ItemFieldValue(input:{ projectId:$projectId, itemId:$itemId, fieldId:$fieldId, value:{ singleSelectOptionId:$optionId } }){ projectV2Item{ id } } }`;
   await ghGql(mut, { projectId, itemId, fieldId, optionId });
 }
