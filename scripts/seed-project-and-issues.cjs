@@ -174,20 +174,42 @@ async function findOrCreateProjectV2(ownerId) {
 }
 
 async function ensureStatusField(projectId) {
-  const q = `query($projectId:ID!){ node(id:$projectId){ ... on ProjectV2 { fields(first:50){ nodes{ id name dataType __typename ... on ProjectV2SingleSelectField { options { id name } } } } } } }`;
+  const q = `query($projectId:ID!){
+    node(id:$projectId){
+      ... on ProjectV2 {
+        fields(first:50){
+          nodes{
+            __typename
+            ... on ProjectV2Field {
+              id
+              name
+              dataType
+            }
+            ... on ProjectV2SingleSelectField {
+              id
+              name
+              dataType
+              options { id name }
+            }
+          }
+        }
+      }
+    }
+  }`;
   const data = await ghGql(q, { projectId });
-  const fields = data.node.fields.nodes;
-  let statusField = fields.find(f => f.name === 'Status' && f.dataType === 'SINGLE_SELECT');
+  const fields = (((data||{}).node||{}).fields||{}).nodes || [];
+  let statusField = fields.find(f => f && f.name === 'Status' && (f.dataType === 'SINGLE_SELECT' || f.__typename === 'ProjectV2SingleSelectField'));
   if (!statusField) {
     const createField = `mutation($projectId:ID!){ createProjectV2Field(input:{projectId:$projectId, name:"Status", dataType:SINGLE_SELECT}){ projectV2Field{ id name } } }`;
     const created = await ghGql(createField, { projectId });
     statusField = created.createProjectV2Field.projectV2Field;
   }
   const desired = ['Backlog', 'Now', 'In progress', 'Review', 'Blocked', 'Done'];
-  // Re-fetch to get options
+  // Re-fetch to get options on the field itself
   const ref = await ghGql(q, { projectId });
-  const fld = ref.node.fields.nodes.find(f => f.name === 'Status');
-  const current = (fld.options || []).map(o => o.name);
+  const fList = ((((ref||{}).node||{}).fields||{}).nodes||[]);
+  const fld = fList.find(f => f && f.name === 'Status');
+  const current = ((fld && fld.options) ? fld.options : []).map(o => o.name);
   const needUpdate = desired.some(d => !current.includes(d)) || current.some(c => !desired.includes(c));
   if (needUpdate) {
     const update = `mutation($projectId:ID!,$fieldId:ID!,$name:String!,$options:[ProjectV2SingleSelectFieldOptionInput!]!){ updateProjectV2SingleSelectField(input:{projectId:$projectId, fieldId:$fieldId, name:$name, options:$options}){ projectV2SingleSelectField{ id } } }`;
@@ -199,8 +221,9 @@ async function ensureStatusField(projectId) {
     });
   }
   const ref2 = await ghGql(q, { projectId });
-  const fld2 = ref2.node.fields.nodes.find(f => f.name === 'Status');
-  const optionMap = Object.fromEntries(fld2.options.map(o => [o.name, o.id]));
+  const fList2 = ((((ref2||{}).node||{}).fields||{}).nodes||[]);
+  const fld2 = fList2.find(f => f && f.name === 'Status');
+  const optionMap = Object.fromEntries(((fld2 && fld2.options) ? fld2.options : []).map(o => [o.name, o.id]));
   return { fieldId: fld2.id, optionMap };
 }
 
