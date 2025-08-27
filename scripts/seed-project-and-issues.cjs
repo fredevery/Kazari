@@ -20,6 +20,8 @@ if (!TOKEN) {
 
 const REST = 'https://api.github.com';
 const GRAPHQL = 'https://api.github.com/graphql';
+const PROJECT_TITLE = process.env.KAZARI_PROJECT_TITLE || 'Kazari Roadmap';
+const PROJECT_ID_OVERRIDE = process.env.KAZARI_PROJECT_ID || '';
 
 async function ghRest(url, method = 'GET', body) {
   const res = await fetch(url, {
@@ -131,22 +133,42 @@ function columnForStatus(status) {
 
 // ------------------- Projects v2 helpers (GraphQL) -------------------
 async function getOwnerNode() {
-  const q = `query($login:String!){ user(login:$login){ id login } organization(login:$login){ id login } }`;
-  const data = await ghGql(q, { login: OWNER });
-  if (data.organization && data.organization.id) return { type: 'org', id: data.organization.id };
-  if (data.user && data.user.id) return { type: 'user', id: data.user.id };
-  throw new Error(`Owner not found for ${OWNER}`);
+  // Try resolving as a User first.
+  const qUser = `query($login:String!){ user(login:$login){ id login } }`;
+  let data = null;
+  try {
+    data = await ghGql(qUser, { login: OWNER });
+  } catch (_) {
+    data = null;
+  }
+  if (data && data.user && data.user.id) return { type: 'user', id: data.user.id };
+
+  // Fallback to Organization; some tokens may not have org visibility.
+  const qOrg = `query($login:String!){ organization(login:$login){ id login } }`;
+  try {
+    data = await ghGql(qOrg, { login: OWNER });
+  } catch (_) {
+    data = null;
+  }
+  if (data && data.organization && data.organization.id) return { type: 'org', id: data.organization.id };
+
+  throw new Error(`Owner not found or not accessible for ${OWNER}`);
 }
 
 async function findOrCreateProjectV2(ownerId) {
+  if (PROJECT_ID_OVERRIDE) return PROJECT_ID_OVERRIDE;
   const query = `query($ownerId:ID!){ node(id:$ownerId){ ... on User { projectsV2(first:50){ nodes{ id title } } } ... on Organization { projectsV2(first:50){ nodes{ id title } } } } }`;
   const data = await ghGql(query, { ownerId });
-  const nodes = data.node.projectsV2.nodes || [];
-  let project = nodes.find(p => p.title === 'Kazari Roadmap');
+  const nodes = (data && data.node && data.node.projectsV2 && data.node.projectsV2.nodes) ? data.node.projectsV2.nodes : [];
+  let project = nodes.find(p => p.title === PROJECT_TITLE);
   if (!project) {
     const create = `mutation($ownerId:ID!,$title:String!){ createProjectV2(input:{ownerId:$ownerId,title:$title}){ projectV2{ id title } } }`;
-    const created = await ghGql(create, { ownerId, title: 'Kazari Roadmap' });
-    project = created.createProjectV2.projectV2;
+    try {
+      const created = await ghGql(create, { ownerId, title: PROJECT_TITLE });
+      project = created.createProjectV2.projectV2;
+    } catch (e) {
+      throw new Error(`Failed to create Projects v2 '${PROJECT_TITLE}'. If this is a user-owned repo, GITHUB_TOKEN may lack permission to create user projects. Set KAZARI_PROJECT_ID to an existing project, or run with a PAT. Original: ${e.message || e}`);
+    }
   }
   return project.id;
 }
