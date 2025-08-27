@@ -159,7 +159,7 @@ async function ensureStatusField(projectId) {
     const created = await ghGql(createField, { projectId });
     statusField = created.createProjectV2Field.projectV2Field;
   }
-  const desired = ['Backlog','Now','In progress','Review','Blocked','Done'];
+  const desired = ['Backlog', 'Now', 'In progress', 'Review', 'Blocked', 'Done'];
   // Re-fetch to get options
   const ref = await ghGql(q, { projectId });
   const fld = ref.node.fields.nodes.find(f => f.name === 'Status');
@@ -234,7 +234,7 @@ async function ensureIssue(item, file) {
   const all = await listAllIssues();
   const title = `[${item.id}] ${item.title || ''}`.trim();
   let issue = all.find(i => i.title === title);
-  const labels = Array.from(new Set(['roadmap', `status:${(item.status||'planned').toLowerCase()}`, `owner:${(item.owner||'core').toLowerCase()}`, areaFromId(item.id)]));
+  const labels = Array.from(new Set(['roadmap', `status:${(item.status || 'planned').toLowerCase()}`, `owner:${(item.owner || 'core').toLowerCase()}`, areaFromId(item.id)]));
   const body = issueBody(item, file);
   if (!issue) {
     issue = await ghRest(`${REST}/repos/${OWNER}/${REPO}/issues`, 'POST', { title, body, labels });
