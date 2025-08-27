@@ -25,4 +25,5 @@ jobs:
       - name: Run sync
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.ROADMAP_PAT }}
         run: node scripts/seed-project-and-issues.cjs

@@ -12,7 +12,7 @@ const path = require('path');
 
 const OWNER_REPO = process.env.GITHUB_REPOSITORY || 'fredevery/Kazari';
 const [OWNER, REPO] = OWNER_REPO.split('/');
-const TOKEN = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
+const TOKEN = process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
 if (!TOKEN) {
   console.error('Missing GITHUB_TOKEN/GH_TOKEN');
   process.exit(1);
