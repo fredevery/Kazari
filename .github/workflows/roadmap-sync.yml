@@ -26,3 +26,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/seed-project-and-issues.cjs
+
+# ping
